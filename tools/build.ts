@@ -23,7 +23,6 @@ let scriptBuild = await Bun.build({
   entrypoints: scripts,
   outdir: "./out/js",
 	target: 'browser',
-	splitting: true,
   minify: true,
   plugins: [],
 });
