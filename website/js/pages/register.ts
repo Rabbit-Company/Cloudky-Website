@@ -1,7 +1,7 @@
 import PasswordEntropy from '@rabbit-company/password-entropy';
-import { fhide, fshow, isfHidden } from './utils';
-import { setIcon } from './icons';
-import { getText } from './lang';
+import { fhide, fshow, isfHidden } from '../utils';
+import { setIcon } from '../icons';
+import { getText } from '../lang';
 
 const serverInput = document.getElementById('server') as HTMLInputElement;
 const usernameInput = document.getElementById('username') as HTMLInputElement;

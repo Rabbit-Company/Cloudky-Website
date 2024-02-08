@@ -15,13 +15,13 @@ Logger.info('"dist" folder has been removed');
 Logger.info('Start bulding JS files...');
 let scripts = [];
 const typeScriptGlob = new Glob("**.ts");
-for await (const file of typeScriptGlob.scan({cwd: "./website/js"})) {
-  scripts.push(`./website/js/${file}`);
+for await (const file of typeScriptGlob.scan({cwd: "./website/js/pages"})) {
+  scripts.push(`./website/js/pages/${file}`);
 }
 
 let scriptBuild = await Bun.build({
   entrypoints: scripts,
-  outdir: "./dist/js",
+  outdir: "./dist/js/pages",
 	target: 'browser',
   minify: true,
   plugins: [],
@@ -30,6 +30,7 @@ if(scriptBuild.success){
 	Logger.info('Bulding JS files complete');
 }else{
 	Logger.error('Bulding JS files failed');
+	console.log(scriptBuild.logs);
 }
 
 let copyFiles = ['html', 'css', 'js', 'wasm', 'json', 'png', 'svg'];
