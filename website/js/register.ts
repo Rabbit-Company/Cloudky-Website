@@ -4,7 +4,7 @@ import { setIcon } from './icons';
 
 const passwordInput = document.getElementById('password') as HTMLInputElement;
 
-const signInBtnElement = document.getElementById("btn_signin");
+const signInBtnElement = document.getElementById("btn-signin");
 const signUpFormElement = document.getElementById("signup-form");
 const entropyElement = document.getElementById('entropy');
 const serverPickerElement = document.getElementById('server-picker');
