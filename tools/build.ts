@@ -32,7 +32,7 @@ if(scriptBuild.success){
 	Logger.error('Bulding JS files failed');
 }
 
-let copyFiles = ['html', 'css', 'js', 'wasm', 'png', 'svg'];
+let copyFiles = ['html', 'css', 'js', 'wasm', 'json', 'png', 'svg'];
 copyFiles.forEach(async file => {
 	Logger.info(`Start copying ${file.toUpperCase()} files...`);
 	const glob = new Glob(`**/**.${file}`);

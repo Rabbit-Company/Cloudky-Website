@@ -1,14 +1,28 @@
 import PasswordEntropy from '@rabbit-company/password-entropy';
 import { fhide, fshow, isfHidden } from './utils';
 import { setIcon } from './icons';
+import { getText } from './lang';
 
+const serverInput = document.getElementById('server') as HTMLInputElement;
+const usernameInput = document.getElementById('username') as HTMLInputElement;
+const emailInput = document.getElementById('email') as HTMLInputElement;
 const passwordInput = document.getElementById('password') as HTMLInputElement;
 
-const signInBtnElement = document.getElementById("btn-signin");
-const signUpFormElement = document.getElementById("signup-form");
+const signInBtnElement = document.getElementById('btn-signin');
+const signUpBtnElement = document.getElementById('btn-signup');
+const signUpFormElement = document.getElementById('signup-form');
 const entropyElement = document.getElementById('entropy');
 const serverPickerElement = document.getElementById('server-picker');
 const passwordHiderElement = document.getElementById('password-hider');
+const tosElement = document.getElementById('tos');
+
+if(serverInput) serverInput.placeholder = await getText('server');
+if(usernameInput) usernameInput.placeholder = await getText('username');
+if(emailInput) emailInput.placeholder = await getText('email');
+if(passwordInput) passwordInput.placeholder = await getText('password');
+if(signInBtnElement) signInBtnElement.innerText = await getText('signin');
+if(signUpBtnElement) signUpBtnElement.innerText = await getText('signup');
+if(tosElement) tosElement.innerText = await getText('terms_of_service');
 
 signInBtnElement?.addEventListener('click', () => {
 	window.location.href = 'index.html';
@@ -42,13 +56,13 @@ passwordHiderElement?.addEventListener('click', () => {
 });
 
 function toggleServerPicker(){
-	if(isfHidden('passky-server')){
-		fhide('passky-server2');
-		fshow('passky-server');
+	if(isfHidden('server')){
+		fhide('server2');
+		fshow('server');
 		setIcon('server-picker', 'adjustments-off', 'secondaryColor', 5);
 	}else{
-		fhide('passky-server');
-		fshow('passky-server2');
+		fhide('server');
+		fshow('server2');
 		setIcon('server-picker', 'adjustments', 'secondaryColor', 5);
 	}
 }
