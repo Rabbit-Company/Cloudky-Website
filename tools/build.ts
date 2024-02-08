@@ -32,30 +32,12 @@ if(scriptBuild.success){
 	Logger.error('Bulding JS files failed');
 }
 
-Logger.info('Start copying HTML files...');
-const htmlGlob = new Glob("**/**.html");
-for await (const file of htmlGlob.scan({cwd: "./website"})) {
-	await Bun.write(Bun.file(`./dist/${file}`), Bun.file(`./website/${file}`));
-}
-Logger.info('Copying HTML files complete');
-
-Logger.info('Start copying CSS files...');
-const cssGlob = new Glob("**/**.css");
-for await (const file of cssGlob.scan({cwd: "./website"})) {
-	await Bun.write(Bun.file(`./dist/${file}`), Bun.file(`./website/${file}`));
-}
-Logger.info('Copying CSS files complete');
-
-Logger.info('Start copying JS files...');
-const scriptGlob = new Glob("**/**.js");
-for await (const file of scriptGlob.scan({cwd: "./website"})) {
-	await Bun.write(Bun.file(`./dist/${file}`), Bun.file(`./website/${file}`));
-}
-Logger.info('Copying JS files complete');
-
-Logger.info('Start copying WASM files...');
-const wasmGlob = new Glob("**/**.wasm");
-for await (const file of wasmGlob.scan({cwd: "./website"})) {
-	await Bun.write(Bun.file(`./dist/${file}`), Bun.file(`./website/${file}`));
-}
-Logger.info('Copying WASM files complete');
+let copyFiles = ['html', 'css', 'js', 'wasm', 'png', 'svg'];
+copyFiles.forEach(async file => {
+	Logger.info(`Start copying ${file.toUpperCase()} files...`);
+	const glob = new Glob(`**/**.${file}`);
+	for await (const file of glob.scan({cwd: "./website"})) {
+		await Bun.write(Bun.file(`./dist/${file}`), Bun.file(`./website/${file}`));
+	}
+	Logger.info(`Copying ${file.toUpperCase()} files complete`);
+});
