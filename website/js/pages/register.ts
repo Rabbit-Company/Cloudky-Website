@@ -4,6 +4,7 @@ import { setIcon } from '../icons';
 import { getText } from '../lang';
 
 const serverInput = document.getElementById('server') as HTMLInputElement;
+const server2Input = document.getElementById('server2') as HTMLSelectElement;
 const usernameInput = document.getElementById('username') as HTMLInputElement;
 const emailInput = document.getElementById('email') as HTMLInputElement;
 const passwordInput = document.getElementById('password') as HTMLInputElement;
@@ -23,6 +24,17 @@ if(passwordInput) passwordInput.placeholder = await getText('password');
 if(signInBtnElement) signInBtnElement.innerText = await getText('signin');
 if(signUpBtnElement) signUpBtnElement.innerText = await getText('signup');
 if(tosElement) tosElement.innerText = await getText('terms_of_service');
+
+let server = localStorage.getItem('url');
+if(server !== null){
+	let servers = Array.from(server2Input.options).map(v => v.value);
+	if(servers.includes(server)){
+		server2Input.value = server;
+	}else{
+		serverInput.value = server;
+		toggleServerPicker();
+	}
+}
 
 signInBtnElement?.addEventListener('click', () => {
 	window.location.href = 'index.html';
