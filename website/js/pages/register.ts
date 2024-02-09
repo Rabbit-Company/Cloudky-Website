@@ -107,7 +107,7 @@ async function starRegistrationProcess(){
 	const authHash = Blake2b.hash(`cloudky2024-${password}-${username}`, '');
 	const authSalt = Blake2b.hash(`cloudky2024-${username}`, '');
 	try{
-		const authFinalHash = await Argon2id.hash(authHash, authSalt, 4, 16, 3, 32);
+		const authFinalHash = await Argon2id.hash(authHash, authSalt, 4, 16, 3, 64);
 		register(url, username, email, authFinalHash, 0);
 	}catch{
 		Logger.error('Argon2id hashing');

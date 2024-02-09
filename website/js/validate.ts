@@ -1,11 +1,11 @@
 export default class Validate{
 
 	static username(username: string): boolean{
-		return /^[a-z0-9._]{6,30}$/i.test(username);
+		return /^([a-z][a-z0-9\-]{3,29})$/.test(username);
 	}
 
 	static password(password: string): boolean{
-		return password.length >= 8;
+		return /^[a-z0-9]{128}$/i.test(password);
 	}
 
 	static url(url: string): boolean{
