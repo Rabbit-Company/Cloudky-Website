@@ -6,6 +6,7 @@ import Cloudky from '../api';
 import { DialogType, changeDialog } from '../dialog';
 import Blake2b from '@rabbit-company/blake2b';
 import Argon2id from '@rabbit-company/argon2id';
+import Logger from '@rabbit-company/logger';
 
 const serverInput = document.getElementById('server') as HTMLInputElement;
 const server2Input = document.getElementById('server2') as HTMLSelectElement;
@@ -105,8 +106,12 @@ async function starRegistrationProcess(){
 
 	const authHash = Blake2b.hash(`cloudky2024-${password}-${username}`, '');
 	const authSalt = Blake2b.hash(`cloudky2024-${username}`, '');
-	const authFinalHash = await Argon2id.hash(authHash, authSalt, 4, 16, 3, 32);
-	register(url, username, email, authFinalHash, 0);
+	try{
+		const authFinalHash = await Argon2id.hash(authHash, authSalt, 4, 16, 3, 32);
+		register(url, username, email, authFinalHash, 0);
+	}catch{
+		Logger.error('Argon2id hashing');
+	}
 }
 
 async function register(url: string, username: string, email: string, authPass: string, type: number){
