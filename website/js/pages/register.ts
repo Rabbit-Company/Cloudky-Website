@@ -1,7 +1,11 @@
 import PasswordEntropy from '@rabbit-company/password-entropy';
-import { fhide, fshow, isfHidden } from '../utils';
+import { fhide, fshow, isfHidden, show, showDialogButtons } from '../utils';
 import { setIcon } from '../icons';
 import { getText } from '../lang';
+import Cloudky from '../api';
+import { DialogType, changeDialog } from '../dialog';
+import Blake2b from '@rabbit-company/blake2b';
+import Argon2id from '@rabbit-company/argon2id';
 
 const serverInput = document.getElementById('server') as HTMLInputElement;
 const server2Input = document.getElementById('server2') as HTMLSelectElement;
@@ -42,6 +46,7 @@ signInBtnElement?.addEventListener('click', () => {
 
 signUpFormElement?.addEventListener('submit', e => {
 	e.preventDefault();
+	starRegistrationProcess();
 });
 
 passwordInput?.addEventListener('input', () => {
@@ -76,5 +81,57 @@ function toggleServerPicker(){
 		fhide('server');
 		fshow('server2');
 		setIcon('server-picker', 'adjustments', 'secondaryColor', 5);
+	}
+}
+
+async function starRegistrationProcess(){
+	let url = serverInput.value;
+	const username = usernameInput.value.toLowerCase();
+	const email = emailInput.value;
+	const password = passwordInput.value;
+
+	if(isfHidden('server')){
+		url = server2Input.value;
+	}
+
+	if(PasswordEntropy.calculate(password) < 75){
+		changeDialog(DialogType.ERROR, await getText('5'));
+		show('dialog');
+		return;
+	}
+
+	changeDialog(DialogType.LOADING, "signing_up");
+	show('dialog');
+
+	const authHash = Blake2b.hash(`cloudky2024-${password}-${username}`, '');
+	const authSalt = Blake2b.hash(`cloudky2024-${username}`, '');
+	const authFinalHash = await Argon2id.hash(authHash, authSalt, 4, 16, 3, 32);
+	register(url, username, email, authFinalHash, 0);
+}
+
+async function register(url: string, username: string, email: string, authPass: string, type: number){
+	try{
+		let data = await Cloudky.createAccount(url, username, email, authPass, type);
+
+		showDialogButtons();
+
+		if(typeof data.error === 'undefined'){
+			changeDialog(DialogType.ERROR, await getText('server_unreachable'));
+			return;
+		}
+
+		if(data.error != 0){
+			changeDialog(DialogType.ERROR, await getText(data.error));
+			return;
+		}
+
+		localStorage.setItem('url', url);
+		localStorage.setItem('username', username);
+
+		changeDialog(DialogType.SUCCESS, await getText('registration_completed'));
+	}catch(err){
+		showDialogButtons();
+		if(typeof err !== 'string') return;
+		changeDialog(DialogType.ERROR, await getText(err));
 	}
 }

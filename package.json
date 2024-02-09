@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "@rabbit-company/argon2id": "^2.0.0",
+    "@rabbit-company/blake2b": "^2.0.0",
     "@rabbit-company/logger": "^3.1.0",
     "@rabbit-company/password-entropy": "^2.0.1",
     "@rabbit-company/password-generator": "^2.0.1",

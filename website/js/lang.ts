@@ -1,6 +1,6 @@
 import Logger from "@rabbit-company/logger";
 
-const languageList = ['af', 'ar', 'bs', 'ca', 'cs', 'da', 'de', 'el', 'en', 'es-ES', 'fa', 'fi', 'fr', 'he', 'hi', 'hu', 'id', 'it', 'ja', 'ko', 'nl', 'no', 'pl', 'pt-BR', 'pt-PT', 'ro', 'ru', 'sl', 'sr', 'sv-SE', 'tr', 'uk', 'vi', 'zh-CN', 'zh-TW'];
+const languageList: string[] = ['af', 'ar', 'bs', 'ca', 'cs', 'da', 'de', 'el', 'en', 'es-ES', 'fa', 'fi', 'fr', 'he', 'hi', 'hu', 'id', 'it', 'ja', 'ko', 'nl', 'no', 'pl', 'pt-BR', 'pt-PT', 'ro', 'ru', 'sl', 'sr', 'sv-SE', 'tr', 'uk', 'vi', 'zh-CN', 'zh-TW'];
 
 interface Translations {
 	[key: string]: string;
@@ -29,7 +29,7 @@ export function getLang(): string{
 	return lang;
 }
 
-export async function loadTranslations(lang: string) {
+export async function loadTranslations(lang: string): Promise<void> {
 	if (!translationsCache[lang]) {
 		try{
 			const response = await fetch(`/lang/${lang}/lang.json`);
