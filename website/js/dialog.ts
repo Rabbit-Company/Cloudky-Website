@@ -1,12 +1,13 @@
 import Logger from "@rabbit-company/logger";
 import { getIcon } from "./icons";
 import { getText } from "./lang";
-import { hide, hideDialogButtons } from "./utils";
+import { copyToClipboard, hide, hideDialogButtons, setText, showDialogButtons } from "./utils";
 
 export enum DialogType {
 	ERROR = 'Errror',
 	SUCCESS = 'Success',
-	LOADING = 'Loading'
+	LOADING = 'Loading',
+	DEBUG = 'Debug'
 }
 
 function getIconClassName(bgColorClass: string){
@@ -61,6 +62,23 @@ export async function changeDialog(dialogType: DialogType, text: string){
 		dialogTextElement.innerText = await getText(text);
 
 		hideDialogButtons();
+	}else if(dialogType === DialogType.DEBUG){
+		dialogIconElement.className = getIconClassName('bg-blue-100');
+		dialogIconElement.innerHTML = getIcon('first-aid-kit', 'text-blue-600 animate-bounce', 6);
+
+		dialogTitleElement.innerText = 'Debug';
+		dialogTextElement.innerText = text;
+
+		dialogButtonCancelElement.style.display = 'initial';
+		dialogButtonCancelElement.onclick = () => hide("dialog");
+
+		dialogButtonElement.className = getButtonClassName('primaryButton');
+		dialogButtonElement.innerText = await getText('copy');
+		dialogButtonElement.onclick = () => {
+			copyToClipboard(text);
+			hide('dialog');
+		}
+		showDialogButtons();
 	}
 
 }

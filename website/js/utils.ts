@@ -1,3 +1,5 @@
+import Argon2id from "@rabbit-company/argon2id";
+import Blake2b from "@rabbit-company/blake2b";
 import Logger from "@rabbit-company/logger";
 
 export function fhide(id: string): void{
@@ -97,4 +99,57 @@ export function hideDialogButtons(): void{
 
 	button1.style.display = "none";
 	button2.style.display = "none";
+}
+
+export async function copyToClipboard(text: string){
+	if(navigator.clipboard){
+		await navigator.clipboard.writeText(text);
+		return;
+	}
+
+	let textArea = document.createElement("textarea");
+	textArea.value = text;
+
+	textArea.style.top = '0';
+	textArea.style.left = '0';
+	textArea.style.position = "fixed";
+
+	document.body.appendChild(textArea);
+	textArea.focus();
+	textArea.select();
+	textArea.setSelectionRange(0, 99999);
+
+	document.execCommand('copy');
+	document.body.removeChild(textArea);
+}
+
+export async function getDebugInfo(): Promise<string>{
+	let blake2b: boolean = false;
+	let argon2id: number = 0;
+
+	const blake2bHash: string = Blake2b.hash('test', '');
+	try{
+		const startTime = performance.now();
+		const argon2idHash = await Argon2id.hash('test', 'testtesttesttest', 4, 16, 3, 64);
+		const endTime = performance.now();
+		argon2id = Math.round(endTime - startTime);
+		if(!argon2idHash.startsWith('82271eb8bc') || !argon2idHash.endsWith('2400cecbb1')) argon2id = -1;
+	}catch{}
+
+	if(blake2bHash.startsWith('a71079d428') && blake2bHash.endsWith('6a89bea572')) blake2b = true;
+
+	return `
+	Client Version: 1.0.0
+
+	Server: ${localStorage.getItem('url')}
+	Username: ${localStorage.getItem('username')}
+
+	Clipboard: ${!!navigator.clipboard}
+	WebWorkers: ${!!Worker}
+	WebAssembly: ${typeof WebAssembly?.instantiate === 'function'}
+	Blake2b: ${blake2b}
+	Argon2id: ${argon2id}ms
+
+	${navigator.userAgent}
+	`.replaceAll('\t', '').trimStart().trimEnd();
 }
