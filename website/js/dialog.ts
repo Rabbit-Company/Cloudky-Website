@@ -59,7 +59,7 @@ export async function changeDialog(dialogType: DialogType, text: string){
 		dialogIconElement.innerHTML = getIcon('loader-2', 'text-blue-600', 6);
 
 		dialogTitleElement.innerText = await getText('please_wait');
-		dialogTextElement.innerText = await getText(text);
+		dialogTextElement.innerText = text;
 
 		hideDialogButtons();
 	}else if(dialogType === DialogType.DEBUG){

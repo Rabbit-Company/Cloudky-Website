@@ -101,7 +101,7 @@ async function starRegistrationProcess(){
 		return;
 	}
 
-	changeDialog(DialogType.LOADING, "signing_up");
+	changeDialog(DialogType.LOADING, await getText('signing_up'));
 	show('dialog');
 
 	const authHash = Blake2b.hash(`cloudky2024-${password}-${username}`, '');

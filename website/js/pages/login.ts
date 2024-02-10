@@ -1,7 +1,12 @@
+import PasswordEntropy from "@rabbit-company/password-entropy";
 import { DialogType, changeDialog } from "../dialog";
 import { setIcon } from "../icons";
 import { getText } from "../lang";
-import { fhide, fshow, getDebugInfo, isfHidden, show } from "../utils";
+import { fhide, fshow, getDebugInfo, isfHidden, show, showDialogButtons } from "../utils";
+import Blake2b from "@rabbit-company/blake2b";
+import Argon2id from "@rabbit-company/argon2id";
+import Logger from "@rabbit-company/logger";
+import Cloudky from "../api";
 
 const serverInput = document.getElementById('server') as HTMLInputElement;
 const server2Input = document.getElementById('server2') as HTMLSelectElement;
@@ -34,13 +39,16 @@ if(server !== null){
 	}
 }
 
+let username = localStorage.getItem('username');
+if(usernameInput && username !== null) usernameInput.value = username;
+
 signUpBtnElement?.addEventListener('click', () => {
 	window.location.href = 'register.html';
 });
 
 signInFormElement?.addEventListener('submit', e => {
 	e.preventDefault();
-	//starRegistrationProcess();
+	starLoginProcess();
 });
 
 serverPickerElement?.addEventListener('click', () => {
@@ -68,5 +76,71 @@ function toggleServerPicker(){
 		fhide('server');
 		fshow('server2');
 		setIcon('server-picker', 'adjustments', 'secondaryColor', 5);
+	}
+}
+
+async function starLoginProcess(){
+	let url = serverInput.value;
+	const username = usernameInput.value.toLowerCase();
+	const password = passwordInput.value;
+	const otp = otpInput.value;
+
+	if(isfHidden('server')){
+		url = server2Input.value;
+	}
+
+	if(PasswordEntropy.calculate(password) < 75){
+		changeDialog(DialogType.ERROR, await getText('2'));
+		show('dialog');
+		return;
+	}
+
+	changeDialog(DialogType.LOADING, await getText('signing_in'));
+	show('dialog');
+
+	const authHash = Blake2b.hash(`cloudky2024-${password}-${username}`, '');
+	const authSalt = Blake2b.hash(`cloudky2024-${username}`, '');
+	try{
+		const authFinalHash = await Argon2id.hash(authHash, authSalt, 4, 16, 3, 64);
+		login(url, username, authFinalHash, password, otp);
+	}catch{
+		Logger.error('Argon2id hashing');
+	}
+}
+
+async function login(url: string, username: string, authPass: string, password: string, otp: string){
+	try{
+		let data = await Cloudky.getToken(url, username, authPass, otp);
+
+		showDialogButtons();
+
+		if(typeof data.error === 'undefined'){
+			changeDialog(DialogType.ERROR, await getText('server_unreachable'));
+			return;
+		}
+
+		if(data.error != 0){
+			changeDialog(DialogType.ERROR, await getText(data.error));
+			return;
+		}
+
+		localStorage.setItem('url', url);
+		localStorage.setItem('username', username);
+		localStorage.setItem('token', data.token);
+		localStorage.setItem('logged', Date.now().toString());
+
+		const localHash = Blake2b.hash(`${username}-${password}-cloudky2024`, '');
+		const localSalt = Blake2b.hash(`${username}-cloudky2024`, '');
+		try{
+			const localFinalHash = await Argon2id.hash(localHash, localSalt, 4, 16, 3, 64);
+			localStorage.setItem('hash', localFinalHash);
+			window.location.href = 'dashboard.html';
+		}catch{
+			Logger.error('Argon2id hashing');
+		}
+	}catch(err){
+		showDialogButtons();
+		if(typeof err !== 'string') return;
+		changeDialog(DialogType.ERROR, await getText(err));
 	}
 }
