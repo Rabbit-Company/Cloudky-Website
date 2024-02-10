@@ -141,7 +141,7 @@ export async function getDebugInfo(): Promise<string>{
 	return `
 	Client Version: 1.0.0
 
-	Server: ${localStorage.getItem('url')}
+	Server: ${localStorage.getItem('server')}
 	Username: ${localStorage.getItem('username')}
 
 	Clipboard: ${!!navigator.clipboard}
@@ -152,4 +152,25 @@ export async function getDebugInfo(): Promise<string>{
 
 	${navigator.userAgent}
 	`.replaceAll('\t', '').trimStart().trimEnd();
+}
+
+export function clearStorage(items: string[] = ['token', 'hash', 'logged']){
+	items.forEach(variable => localStorage.removeItem(variable));
+}
+
+export function isSessionValid(): boolean{
+	const varList = ['server', 'username', 'token', 'hash'];
+
+	let logged = localStorage.getItem('logged');
+	let sessionDuration = localStorage.getItem('session-duration');
+
+	if(logged === null) return false;
+	if(sessionDuration === null) return false;
+
+	if((Number(logged) + (Number(sessionDuration) * 60000)) < Date.now()) return false;
+
+	for(let i = 0; i < varList.length; i++){
+		if(localStorage.getItem(varList[i]) === null) return false;
+	}
+	return true;
 }

@@ -1,5 +1,5 @@
 import PasswordEntropy from '@rabbit-company/password-entropy';
-import { fhide, fshow, isfHidden, show, showDialogButtons } from '../utils';
+import { fhide, fshow, isSessionValid, isfHidden, show, showDialogButtons } from '../utils';
 import { setIcon } from '../icons';
 import { getText } from '../lang';
 import Cloudky from '../api';
@@ -7,6 +7,8 @@ import { DialogType, changeDialog } from '../dialog';
 import Blake2b from '@rabbit-company/blake2b';
 import Argon2id from '@rabbit-company/argon2id';
 import Logger from '@rabbit-company/logger';
+
+if(isSessionValid()) window.location.href = 'dashboard.html';
 
 const serverInput = document.getElementById('server') as HTMLInputElement;
 const server2Input = document.getElementById('server2') as HTMLSelectElement;
@@ -30,7 +32,7 @@ if(signInBtnElement) signInBtnElement.innerText = await getText('signin');
 if(signUpBtnElement) signUpBtnElement.innerText = await getText('signup');
 if(tosElement) tosElement.innerText = await getText('terms_of_service');
 
-let server = localStorage.getItem('url');
+let server = localStorage.getItem('server');
 if(server !== null){
 	let servers = Array.from(server2Input.options).map(v => v.value);
 	if(servers.includes(server)){
@@ -86,13 +88,13 @@ function toggleServerPicker(){
 }
 
 async function starRegistrationProcess(){
-	let url = serverInput.value;
+	let server = serverInput.value;
 	const username = usernameInput.value.toLowerCase();
 	const email = emailInput.value;
 	const password = passwordInput.value;
 
 	if(isfHidden('server')){
-		url = server2Input.value;
+		server = server2Input.value;
 	}
 
 	if(PasswordEntropy.calculate(password) < 75){
@@ -108,15 +110,15 @@ async function starRegistrationProcess(){
 	const authSalt = Blake2b.hash(`cloudky2024-${username}`, '');
 	try{
 		const authFinalHash = await Argon2id.hash(authHash, authSalt, 4, 16, 3, 64);
-		register(url, username, email, authFinalHash, 0);
+		register(server, username, email, authFinalHash, 0);
 	}catch{
 		Logger.error('Argon2id hashing');
 	}
 }
 
-async function register(url: string, username: string, email: string, authPass: string, type: number){
+async function register(server: string, username: string, email: string, authPass: string, type: number){
 	try{
-		let data = await Cloudky.createAccount(url, username, email, authPass, type);
+		let data = await Cloudky.createAccount(server, username, email, authPass, type);
 
 		showDialogButtons();
 
@@ -130,7 +132,7 @@ async function register(url: string, username: string, email: string, authPass: 
 			return;
 		}
 
-		localStorage.setItem('url', url);
+		localStorage.setItem('server', server);
 		localStorage.setItem('username', username);
 
 		changeDialog(DialogType.SUCCESS, await getText('registration_completed'));

@@ -2,11 +2,13 @@ import PasswordEntropy from "@rabbit-company/password-entropy";
 import { DialogType, changeDialog } from "../dialog";
 import { setIcon } from "../icons";
 import { getText } from "../lang";
-import { fhide, fshow, getDebugInfo, isfHidden, show, showDialogButtons } from "../utils";
+import { fhide, fshow, getDebugInfo, isSessionValid, isfHidden, show, showDialogButtons } from "../utils";
 import Blake2b from "@rabbit-company/blake2b";
 import Argon2id from "@rabbit-company/argon2id";
 import Logger from "@rabbit-company/logger";
 import Cloudky from "../api";
+
+if(isSessionValid()) window.location.href = 'dashboard.html';
 
 const serverInput = document.getElementById('server') as HTMLInputElement;
 const server2Input = document.getElementById('server2') as HTMLSelectElement;
@@ -28,7 +30,7 @@ if(signInBtnElement) signInBtnElement.innerText = await getText('signin');
 if(signUpBtnElement) signUpBtnElement.innerText = await getText('signup');
 if(forgotenUsernameElement) forgotenUsernameElement.innerText = await getText('forgot_username');
 
-let server = localStorage.getItem('url');
+let server = localStorage.getItem('server');
 if(server !== null){
 	let servers = Array.from(server2Input.options).map(v => v.value);
 	if(servers.includes(server)){
@@ -80,13 +82,13 @@ function toggleServerPicker(){
 }
 
 async function starLoginProcess(){
-	let url = serverInput.value;
+	let server = serverInput.value;
 	const username = usernameInput.value.toLowerCase();
 	const password = passwordInput.value;
 	const otp = otpInput.value;
 
 	if(isfHidden('server')){
-		url = server2Input.value;
+		server = server2Input.value;
 	}
 
 	if(PasswordEntropy.calculate(password) < 75){
@@ -102,15 +104,15 @@ async function starLoginProcess(){
 	const authSalt = Blake2b.hash(`cloudky2024-${username}`, '');
 	try{
 		const authFinalHash = await Argon2id.hash(authHash, authSalt, 4, 16, 3, 64);
-		login(url, username, authFinalHash, password, otp);
+		login(server, username, authFinalHash, password, otp);
 	}catch{
 		Logger.error('Argon2id hashing');
 	}
 }
 
-async function login(url: string, username: string, authPass: string, password: string, otp: string){
+async function login(server: string, username: string, authPass: string, password: string, otp: string){
 	try{
-		let data = await Cloudky.getToken(url, username, authPass, otp);
+		let data = await Cloudky.getToken(server, username, authPass, otp);
 
 		showDialogButtons();
 
@@ -124,7 +126,7 @@ async function login(url: string, username: string, authPass: string, password: 
 			return;
 		}
 
-		localStorage.setItem('url', url);
+		localStorage.setItem('server', server);
 		localStorage.setItem('username', username);
 		localStorage.setItem('token', data.token);
 		localStorage.setItem('logged', Date.now().toString());
