@@ -38,22 +38,22 @@ export function show(id: string): void{
 	element.style.visibility = 'visible';
 }
 
-export function isHidden(id: string): boolean | undefined{
+export function isHidden(id: string, hiddenByDefault: boolean = false): boolean | undefined{
 	let element = document.getElementById(id);
 	if(!element){
 		Logger.error(`Element with ID ${id} not found!`);
 		return;
 	}
-	return (element.style.visibility == 'hidden');
+	return (element.style.visibility == 'hidden' || (hiddenByDefault && element.style.visibility == ''));
 }
 
-export function isfHidden(id: string): boolean | undefined{
+export function isfHidden(id: string, hiddenByDefault: boolean = false): boolean | undefined{
 	let element = document.getElementById(id);
 	if(!element){
 		Logger.error(`Element with ID ${id} not found!`);
 		return;
 	}
-	return (element.style.display == 'none');
+	return (element.style.display == 'none' || (hiddenByDefault && element.style.display == ''));
 }
 
 export function setText(id: string, text: string): void{
@@ -173,4 +173,12 @@ export function isSessionValid(): boolean{
 		if(localStorage.getItem(varList[i]) === null) return false;
 	}
 	return true;
+}
+
+export async function hash(message: string, algo = 'SHA-256') {
+	const msgBuffer = new TextEncoder().encode(message);
+	const hashBuffer = await crypto.subtle.digest(algo, msgBuffer);
+	const hashArray = Array.from(new Uint8Array(hashBuffer));
+	const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+	return hashHex;
 }
