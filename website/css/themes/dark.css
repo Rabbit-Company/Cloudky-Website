@@ -112,28 +112,12 @@ input[type="checkbox"] {
 
 .mainMenuLink:hover {
 	color: #DFE5EB !important;
-	border-color: #D1D5DB !important;
+	background-color: #21262D !important;
 }
 
 .mainMenuLinkSelected {
 	color: #DFE5EB !important;
-	border-color: #6366F1 !important;
-}
-
-.mainMenuMobileLink {
-	background-color: #161B22 !important;
-	color: #DFE5EB !important;
-}
-
-.mainMenuMobileLink:hover {
 	background-color: #21262D !important;
-	border-color: #6B7280 !important;
-}
-
-.mainMenuMobileLinkSelected {
-	background-color: #21262D !important;
-	border-color: #6366F1 !important;
-	color: #6366F1 !important;
 }
 
 #main-menu-toggle-btn {

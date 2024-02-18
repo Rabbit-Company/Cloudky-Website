@@ -1,4 +1,4 @@
-import { fhide, fshow, hash, isfHidden } from "../utils";
+import { clearStorage, fhide, fshow, hash, isfHidden } from "../utils";
 
 const sidebar = document.getElementById('sidebar');
 const sidebarMenuBackdrop = document.getElementById('sidebar-menu-backdrop');
@@ -7,6 +7,7 @@ const sidebarClose = document.getElementById('sidebar-close');
 const sidebarCloseButton = document.getElementById('sidebar-close-btn');
 const sidebarOpenButton = document.getElementById('sidebar-open-btn');
 const profileDropdownButton = document.getElementById('profile-dropdown-btn');
+const signoutButton = document.getElementById('signout-btn');
 
 const avatar = document.getElementById('avatar') as HTMLImageElement;
 avatar.src = `https://gravatar.com/avatar/${await hash('ziga.zajc007@gmail.com')}`;
@@ -45,4 +46,9 @@ profileDropdownButton?.addEventListener('click', () => {
 	}
 
 	fhide('profile-dropdown');
+});
+
+signoutButton?.addEventListener('click', () => {
+	clearStorage();
+	window.location.href = 'index.html';
 });
