@@ -26,7 +26,7 @@ export default class Validate{
 	}
 
 	static token(token: string): boolean{
-		return /^[a-z0-9]{64}$/i.test(token);
+		return /^[a-z0-9]{128}$/i.test(token);
 	}
 
 	static positiveInteger(number: any): boolean{

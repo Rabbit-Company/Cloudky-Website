@@ -2,7 +2,7 @@ import PasswordEntropy from "@rabbit-company/password-entropy";
 import { DialogType, changeDialog } from "../dialog";
 import { setIcon } from "../icons";
 import { getText } from "../lang";
-import { fhide, fshow, getDebugInfo, isSessionValid, isfHidden, show, showDialogButtons } from "../utils";
+import { fhide, fshow, getAccountData, getDebugInfo, isSessionValid, isfHidden, show, showDialogButtons } from "../utils";
 import Blake2b from "@rabbit-company/blake2b";
 import Argon2id from "@rabbit-company/argon2id";
 import Logger from "@rabbit-company/logger";
@@ -131,15 +131,30 @@ async function login(server: string, username: string, authPass: string, passwor
 		localStorage.setItem('token', data.token);
 		localStorage.setItem('logged', Date.now().toString());
 
-		const localHash = Blake2b.hash(`${username}-${password}-cloudky2024`, '');
-		const localSalt = Blake2b.hash(`${username}-cloudky2024`, '');
 		try{
-			const localFinalHash = await Argon2id.hash(localHash, localSalt, 4, 16, 3, 64);
-			localStorage.setItem('hash', localFinalHash);
-			window.location.href = 'dashboard.html';
-		}catch{
-			Logger.error('Argon2id hashing');
+			changeDialog(DialogType.LOADING, 'Loading account data...');
+			await getAccountData(server, username, data.token);
+		}catch(err){
+			showDialogButtons();
+			if(typeof err !== 'string') return;
+			changeDialog(DialogType.ERROR, await getText(err));
+			return;
 		}
+
+		if(localStorage.getItem('account-type') === '1'){
+			try{
+				const localHash = Blake2b.hash(`${username}-${password}-cloudky2024`, '');
+				const localSalt = Blake2b.hash(`${username}-cloudky2024`, '');
+				const localFinalHash = await Argon2id.hash(localHash, localSalt, 4, 16, 3, 64);
+				localStorage.setItem('hash', localFinalHash);
+			}catch(err){
+				showDialogButtons();
+				changeDialog(DialogType.ERROR, 'Generating encryption token has failed!');
+				return;
+			}
+		}
+
+		window.location.href = 'dashboard.html';
 	}catch(err){
 		showDialogButtons();
 		if(typeof err !== 'string') return;

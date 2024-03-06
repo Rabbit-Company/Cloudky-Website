@@ -1,6 +1,7 @@
 import Argon2id from "@rabbit-company/argon2id";
 import Blake2b from "@rabbit-company/blake2b";
 import Logger from "@rabbit-company/logger";
+import Cloudky from "./api";
 
 export function fhide(id: string): void{
 	let element = document.getElementById(id);
@@ -123,6 +124,16 @@ export async function copyToClipboard(text: string){
 	document.body.removeChild(textArea);
 }
 
+export function formatBytes(bytes: number, decimals: number = 2): string {
+	if (bytes === 0) return '0 Bytes';
+
+	const k = 1024;
+	const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+	const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+	return parseFloat((bytes / Math.pow(k, i)).toFixed(decimals)) + ' ' + sizes[i];
+}
+
 export async function getDebugInfo(): Promise<string>{
 	let blake2b: boolean = false;
 	let argon2id: number = 0;
@@ -154,18 +165,32 @@ export async function getDebugInfo(): Promise<string>{
 	`.replaceAll('\t', '').trimStart().trimEnd();
 }
 
-export function clearStorage(items: string[] = ['token', 'hash', 'logged']){
+export function clearStorage(items: string[] = ['token', 'hash', 'logged', 'email', 'storage-used', 'storage-limit', 'storage-type', 'account-type', 'created']){
 	items.forEach(variable => localStorage.removeItem(variable));
 }
 
 export function isSessionValid(): boolean{
-	const varList = ['server', 'username', 'token', 'hash'];
+	let varList = [
+		'server',
+		'username',
+		'token',
+		'email',
+		'storage-used',
+		'storage-limit',
+		'storage-type',
+		'account-type',
+		'created'
+	];
 
 	let logged = localStorage.getItem('logged');
 	let sessionDuration = localStorage.getItem('session-duration');
+	let accountType = localStorage.getItem('account-type');
 
 	if(logged === null) return false;
-	if(sessionDuration === null) return false;
+	if(accountType === null) return false;
+	if(sessionDuration === null) localStorage.setItem('session-duration', '60');
+
+	if(accountType === '1') varList.push('hash');
 
 	if((Number(logged) + (Number(sessionDuration) * 60000)) < Date.now()) return false;
 
@@ -181,4 +206,33 @@ export async function hash(message: string, algo = 'SHA-256') {
 	const hashArray = Array.from(new Uint8Array(hashBuffer));
 	const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 	return hashHex;
+}
+
+export function initializeSession(){
+	if(!isSessionValid()){
+		clearStorage();
+		window.location.href = '/';
+	}
+
+	setInterval(() => {
+		if(!isSessionValid()){
+			clearStorage();
+			window.location.href = '/';
+		}
+	}, 3000);
+}
+
+export async function getAccountData(server: string, username: string, token: string): Promise<boolean>{
+	try{
+		let data = await Cloudky.getAccountData(server, username, token);
+		if(data.error !== 0) return false;
+		localStorage.setItem('email', data.data.Email);
+		localStorage.setItem('storage-used', data.data.StorageUsed);
+		localStorage.setItem('storage-limit', data.data.StorageLimit);
+		localStorage.setItem('storage-type', data.data.StorageType);
+		localStorage.setItem('account-type', data.data.AccountType);
+		localStorage.setItem('created', data.data.Created);
+		return true;
+	}catch{}
+	return false;
 }

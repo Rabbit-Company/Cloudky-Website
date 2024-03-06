@@ -1,4 +1,4 @@
-import { clearStorage, fhide, fshow, hash, isfHidden } from "../utils";
+import { clearStorage, fhide, formatBytes, fshow, hash, initializeSession, isSessionValid, isfHidden } from "../utils";
 
 const sidebar = document.getElementById('sidebar');
 const sidebarMenuBackdrop = document.getElementById('sidebar-menu-backdrop');
@@ -7,10 +7,31 @@ const sidebarClose = document.getElementById('sidebar-close');
 const sidebarCloseButton = document.getElementById('sidebar-close-btn');
 const sidebarOpenButton = document.getElementById('sidebar-open-btn');
 const profileDropdownButton = document.getElementById('profile-dropdown-btn');
+const profileUsername = document.getElementById('profile-username');
 const signoutButton = document.getElementById('signout-btn');
+const sidebarStorage = document.getElementById('sidebar-storage');
+const mobileSidebarStorage = document.getElementById('mobile-sidebar-storage');
+
+initializeSession();
+
+const server = localStorage.getItem('server');
+const username = localStorage.getItem('username');
+const token = localStorage.getItem('token');
+
+const email = localStorage.getItem('email');
+const storageUsed = localStorage.getItem('storage-used');
+const storageLimit = localStorage.getItem('storage-limit');
+const storageType = localStorage.getItem('storage-type');
+const accountType = localStorage.getItem('account-type');
+const created = localStorage.getItem('created');
+
+if(profileUsername) profileUsername.innerText = username || '';
+
+if(sidebarStorage) sidebarStorage.innerText = `${formatBytes(Number(storageUsed) * 1048576)} of ${formatBytes(Number(storageLimit) * 1048576)} used`;
+if(mobileSidebarStorage) mobileSidebarStorage.innerText = `${formatBytes(Number(storageUsed) * 1048576)} of ${formatBytes(Number(storageLimit) * 1048576)} used`;
 
 const avatar = document.getElementById('avatar') as HTMLImageElement;
-avatar.src = `https://gravatar.com/avatar/${await hash('ziga.zajc007@gmail.com')}`;
+avatar.src = `https://gravatar.com/avatar/${await hash(email || '')}`;
 
 sidebarCloseButton?.addEventListener('click', () => {
 	if(!sidebar) return;

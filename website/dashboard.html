@@ -76,7 +76,7 @@
 												<path d="M12 3v9h9" />
 												<path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
 											</svg>
-											78.4MB of 1TB usage
+											<div id="mobile-sidebar-storage"></div>
 										</a>
 									</li>
 								</ul>
@@ -125,7 +125,7 @@
 										<path d="M12 3v9h9" />
 										<path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
 									</svg>
-									78.4MB of 1TB usage
+									<div id="sidebar-storage"></div>
 								</a>
 							</li>
 						</ul>
@@ -155,18 +155,18 @@
 						<div class="flex items-center gap-x-4 lg:gap-x-6">
 
 							<div class="relative">
-								<button id="profile-dropdown-btn" type="button" class="-m-1.5 flex items-center p-1.5" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+								<button id="profile-dropdown-btn" type="button" class="-m-1.5 flex items-center p-1.5" aria-expanded="false" aria-haspopup="true">
 									<span class="sr-only">Open user menu</span>
 									<img id="avatar" class="h-8 w-8 rounded-full bg-gray-700" />
 									<span class="hidden lg:flex lg:items-center">
-										<span class="ml-4 text-sm font-semibold leading-6 text-gray-400" aria-hidden="true">zigazajc007</span>
+										<span id="profile-username" class="ml-4 text-sm font-semibold leading-6 text-gray-400" aria-hidden="true"></span>
 										<svg class="ml-2 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
 											<path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
 										</svg>
 									</span>
 								</button>
 
-								<div id="profile-dropdown" class="secondaryBackgroundColor hidden absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md py-2 shadow-lg focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+								<div id="profile-dropdown" class="secondaryBackgroundColor hidden absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md py-2 shadow-lg focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="profile-dropdown-btn" tabindex="-1">
 									<a href="#" class="mainMenuLink block px-3 py-1 text-sm leading-6" role="menuitem" tabindex="-1">Settings</a>
 									<a id="signout-btn" href="#" class="mainMenuLink block px-3 py-1 text-sm leading-6" role="menuitem" tabindex="-1">Sign out</a>
 								</div>
@@ -177,7 +177,39 @@
 
 				<main class="primaryBackgroundColor py-10">
 					<div class="px-4 sm:px-6 lg:px-8">
-						<!-- Content -->
+
+						<nav class="flex" aria-label="Breadcrumb">
+							<ol role="list" class="flex items-center space-x-4">
+								<li>
+									<div>
+										<a href="#" class="text-gray-400 hover:text-gray-500">
+											<svg class="h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+												<path fill-rule="evenodd" d="M9.293 2.293a1 1 0 011.414 0l7 7A1 1 0 0117 11h-1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-3a1 1 0 00-1-1H9a1 1 0 00-1 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6H3a1 1 0 01-.707-1.707l7-7z" clip-rule="evenodd" />
+											</svg>
+											<span class="sr-only">Home</span>
+										</a>
+									</div>
+								</li>
+								<li>
+									<div class="flex items-center">
+										<svg class="h-5 w-5 flex-shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+											<path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+										</svg>
+										<a href="#" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Videos</a>
+									</div>
+								</li>
+								<li>
+									<div class="flex items-center">
+										<svg class="h-5 w-5 flex-shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+											<path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+										</svg>
+										<a href="#" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700" aria-current="page">Cats</a>
+									</div>
+								</li>
+							</ol>
+						</nav>
+
+
 					</div>
 				</main>
 			</div>
