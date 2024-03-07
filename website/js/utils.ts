@@ -165,7 +165,7 @@ export async function getDebugInfo(): Promise<string>{
 	`.replaceAll('\t', '').trimStart().trimEnd();
 }
 
-export function clearStorage(items: string[] = ['token', 'hash', 'logged', 'email', 'storage-used', 'storage-limit', 'storage-type', 'account-type', 'created']){
+export function clearStorage(items: string[] = ['token', 'hash', 'files', 'logged', 'email', 'storage-used', 'storage-limit', 'storage-type', 'account-type', 'created']){
 	items.forEach(variable => localStorage.removeItem(variable));
 }
 
@@ -174,6 +174,7 @@ export function isSessionValid(): boolean{
 		'server',
 		'username',
 		'token',
+		'files',
 		'email',
 		'storage-used',
 		'storage-limit',
@@ -190,7 +191,10 @@ export function isSessionValid(): boolean{
 	if(logged === null) return false;
 	if(accountType === null) return false;
 	if(debugMode === null) localStorage.setItem('debug-mode', 'false');
-	if(sessionDuration === null) localStorage.setItem('session-duration', '60');
+	if(sessionDuration === null){
+		localStorage.setItem('session-duration', '60');
+		sessionDuration = '60';
+	}
 
 	if(accountType === '1') varList.push('hash');
 
@@ -234,6 +238,16 @@ export async function getAccountData(server: string, username: string, token: st
 		localStorage.setItem('storage-type', data.data.StorageType);
 		localStorage.setItem('account-type', data.data.AccountType);
 		localStorage.setItem('created', data.data.Created);
+		return true;
+	}catch{}
+	return false;
+}
+
+export async function getFileList(server: string, username: string, token: string): Promise<boolean>{
+	try{
+		let data = await Cloudky.getFileList(server, username, token);
+		if(data.error !== 0) return false;
+		localStorage.setItem('files', JSON.stringify(data.data));
 		return true;
 	}catch{}
 	return false;

@@ -2,7 +2,7 @@ import PasswordEntropy from "@rabbit-company/password-entropy";
 import { DialogType, changeDialog } from "../dialog";
 import { setIcon } from "../icons";
 import { getText } from "../lang";
-import { fhide, fshow, getAccountData, getDebugInfo, isSessionValid, isfHidden, show } from "../utils";
+import { fhide, fshow, getAccountData, getDebugInfo, getFileList, isSessionValid, isfHidden, show } from "../utils";
 import Blake2b from "@rabbit-company/blake2b";
 import Argon2id from "@rabbit-company/argon2id";
 import Logger from "@rabbit-company/logger";
@@ -136,6 +136,15 @@ async function login(server: string, username: string, authPass: string, passwor
 		localStorage.setItem('username', username);
 		localStorage.setItem('token', data.token);
 		localStorage.setItem('logged', Date.now().toString());
+
+		try{
+			if(debugMode === 'true') changeDialog(DialogType.LOADING, 'Loading files...');
+			await getFileList(server, username, data.token);
+		}catch(err){
+			if(typeof err !== 'string') return;
+			changeDialog(DialogType.ERROR, await getText(err));
+			return;
+		}
 
 		try{
 			if(debugMode === 'true') changeDialog(DialogType.LOADING, 'Loading account data...');

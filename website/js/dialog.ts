@@ -37,12 +37,13 @@ export async function changeDialog(dialogType: DialogType, text: string){
 		dialogTitleElement.innerText = await getText('error');
 		dialogTextElement.innerText = text;
 
-		dialogButtonCancelElement.style.display = 'none';
-
 		dialogButtonElement.className = getButtonClassName('dangerButton');
 		dialogButtonElement.innerText = await getText('okay');
 		dialogButtonElement.onclick = () => hide("dialog");
+
 		showDialogButtons();
+
+		dialogButtonCancelElement.style.display = 'none';
 	}else if(dialogType === DialogType.SUCCESS){
 		dialogIconElement.className = getIconClassName('bg-green-100');
 		dialogIconElement.innerHTML = getIcon('check', 'text-green-600', 6);
@@ -50,12 +51,13 @@ export async function changeDialog(dialogType: DialogType, text: string){
 		dialogTitleElement.innerText = await getText('success');
 		dialogTextElement.innerText = text;
 
-		dialogButtonCancelElement.style.display = 'none';
-
 		dialogButtonElement.className = getButtonClassName('successButton');
 		dialogButtonElement.innerText = await getText('okay');
 		dialogButtonElement.onclick = () => window.location.href = 'index.html';
+
 		showDialogButtons();
+
+		dialogButtonCancelElement.style.display = 'none';
 	}else if(dialogType === DialogType.LOADING){
 		dialogIconElement.className = getIconClassName('bg-blue-100 animate-spin');
 		dialogIconElement.innerHTML = getIcon('loader-2', 'text-blue-600', 6);
