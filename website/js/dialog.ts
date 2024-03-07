@@ -42,6 +42,7 @@ export async function changeDialog(dialogType: DialogType, text: string){
 		dialogButtonElement.className = getButtonClassName('dangerButton');
 		dialogButtonElement.innerText = await getText('okay');
 		dialogButtonElement.onclick = () => hide("dialog");
+		showDialogButtons();
 	}else if(dialogType === DialogType.SUCCESS){
 		dialogIconElement.className = getIconClassName('bg-green-100');
 		dialogIconElement.innerHTML = getIcon('check', 'text-green-600', 6);
@@ -54,6 +55,7 @@ export async function changeDialog(dialogType: DialogType, text: string){
 		dialogButtonElement.className = getButtonClassName('successButton');
 		dialogButtonElement.innerText = await getText('okay');
 		dialogButtonElement.onclick = () => window.location.href = 'index.html';
+		showDialogButtons();
 	}else if(dialogType === DialogType.LOADING){
 		dialogIconElement.className = getIconClassName('bg-blue-100 animate-spin');
 		dialogIconElement.innerHTML = getIcon('loader-2', 'text-blue-600', 6);

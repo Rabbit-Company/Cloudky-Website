@@ -2,7 +2,7 @@ import PasswordEntropy from "@rabbit-company/password-entropy";
 import { DialogType, changeDialog } from "../dialog";
 import { setIcon } from "../icons";
 import { getText } from "../lang";
-import { fhide, fshow, getAccountData, getDebugInfo, isSessionValid, isfHidden, show, showDialogButtons } from "../utils";
+import { fhide, fshow, getAccountData, getDebugInfo, isSessionValid, isfHidden, show } from "../utils";
 import Blake2b from "@rabbit-company/blake2b";
 import Argon2id from "@rabbit-company/argon2id";
 import Logger from "@rabbit-company/logger";
@@ -97,7 +97,12 @@ async function starLoginProcess(){
 		return;
 	}
 
-	changeDialog(DialogType.LOADING, await getText('signing_in'));
+	let debugMode = localStorage.getItem('debug-mode');
+	if(debugMode === 'true'){
+		changeDialog(DialogType.LOADING, 'Hashing your password...');
+	}else{
+		changeDialog(DialogType.LOADING, await getText('signing_in'));
+	}
 	show('dialog');
 
 	const authHash = Blake2b.hash(`cloudky2024-${password}-${username}`, '');
@@ -112,9 +117,10 @@ async function starLoginProcess(){
 
 async function login(server: string, username: string, authPass: string, password: string, otp: string){
 	try{
-		let data = await Cloudky.getToken(server, username, authPass, otp);
+		let debugMode = localStorage.getItem('debug-mode');
+		if(debugMode === 'true') changeDialog(DialogType.LOADING, 'Generating authentication token...');
 
-		showDialogButtons();
+		let data = await Cloudky.getToken(server, username, authPass, otp);
 
 		if(typeof data.error === 'undefined'){
 			changeDialog(DialogType.ERROR, await getText('server_unreachable'));
@@ -132,10 +138,9 @@ async function login(server: string, username: string, authPass: string, passwor
 		localStorage.setItem('logged', Date.now().toString());
 
 		try{
-			changeDialog(DialogType.LOADING, 'Loading account data...');
+			if(debugMode === 'true') changeDialog(DialogType.LOADING, 'Loading account data...');
 			await getAccountData(server, username, data.token);
 		}catch(err){
-			showDialogButtons();
 			if(typeof err !== 'string') return;
 			changeDialog(DialogType.ERROR, await getText(err));
 			return;
@@ -143,12 +148,12 @@ async function login(server: string, username: string, authPass: string, passwor
 
 		if(localStorage.getItem('account-type') === '1'){
 			try{
+				if(debugMode === 'true') changeDialog(DialogType.LOADING, 'Generating hash for E2EE...');
 				const localHash = Blake2b.hash(`${username}-${password}-cloudky2024`, '');
 				const localSalt = Blake2b.hash(`${username}-cloudky2024`, '');
 				const localFinalHash = await Argon2id.hash(localHash, localSalt, 4, 16, 3, 64);
 				localStorage.setItem('hash', localFinalHash);
 			}catch(err){
-				showDialogButtons();
 				changeDialog(DialogType.ERROR, 'Generating encryption token has failed!');
 				return;
 			}
@@ -156,7 +161,6 @@ async function login(server: string, username: string, authPass: string, passwor
 
 		window.location.href = 'dashboard.html';
 	}catch(err){
-		showDialogButtons();
 		if(typeof err !== 'string') return;
 		changeDialog(DialogType.ERROR, await getText(err));
 	}

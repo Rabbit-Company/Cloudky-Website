@@ -183,11 +183,13 @@ export function isSessionValid(): boolean{
 	];
 
 	let logged = localStorage.getItem('logged');
-	let sessionDuration = localStorage.getItem('session-duration');
 	let accountType = localStorage.getItem('account-type');
+	let debugMode = localStorage.getItem('debug-mode');
+	let sessionDuration = localStorage.getItem('session-duration');
 
 	if(logged === null) return false;
 	if(accountType === null) return false;
+	if(debugMode === null) localStorage.setItem('debug-mode', 'false');
 	if(sessionDuration === null) localStorage.setItem('session-duration', '60');
 
 	if(accountType === '1') varList.push('hash');
