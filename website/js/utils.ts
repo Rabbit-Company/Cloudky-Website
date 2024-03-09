@@ -286,3 +286,51 @@ export interface CFile{
 	LastModified: string;
 	Size: number;
 }
+
+export function filesToNestedObject(files: CFile[]): Record<string, any> {
+	const result: Record<string, any> = {};
+
+	files.forEach(file => {
+		const pathParts = file.Key.split('/');
+		let currentLevel = result;
+
+		for (let i = 0; i < pathParts.length - 1; i++) {
+			const folder = pathParts[i];
+			if (!currentLevel[folder]) {
+				currentLevel[folder] = {};
+			}
+			currentLevel = currentLevel[folder];
+		}
+
+		const fileName = pathParts[pathParts.length - 1];
+		currentLevel[fileName] = {
+			LastModified: file.LastModified,
+			Size: file.Size
+		};
+	});
+
+	return result;
+}
+
+export function getFolderMetadata(folder: Record<string, any>): { LastModified: string, Size: number }{
+	let size = 0;
+	let lastModified = new Date('1970-01-01T00:00:00.000Z');
+	Object.keys(folder).forEach(name => {
+		let value = folder[name];
+		if(typeof(value.LastModified) === 'string' && typeof(value.Size) === 'number'){
+			size += value.Size;
+			if(lastModified.toISOString() < value.LastModified){
+				lastModified = new Date(value.LastModified);
+			}
+			return;
+		}
+
+		let newFolder = getFolderMetadata(value);
+		size += newFolder.Size;
+		if(lastModified.toISOString() < newFolder.LastModified){
+			lastModified = new Date(newFolder.LastModified);
+		}
+	});
+
+	return { LastModified: lastModified.toISOString(), Size: size };
+}

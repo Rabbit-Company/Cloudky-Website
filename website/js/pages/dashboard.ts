@@ -1,5 +1,5 @@
 import { getIcon } from "../icons";
-import { clearStorage, fhide, formatBytes, fshow, hash, initializeSession, isSessionValid, isfHidden, type CFile, formatLastModified } from "../utils";
+import { clearStorage, fhide, formatBytes, fshow, hash, initializeSession, isSessionValid, isfHidden, type CFile, formatLastModified, filesToNestedObject, getFolderMetadata } from "../utils";
 
 const sidebar = document.getElementById('sidebar');
 const sidebarMenuBackdrop = document.getElementById('sidebar-menu-backdrop');
@@ -38,6 +38,9 @@ if(mobileSidebarStorage) mobileSidebarStorage.innerText = `${formatBytes(Number(
 const avatar = document.getElementById('avatar') as HTMLImageElement;
 avatar.src = `https://gravatar.com/avatar/${await hash(email || '')}`;
 
+let sortedFiles = filesToNestedObject(files);
+let displayedFiles = sortedFiles;
+
 let htmlBreadcrumb = `
 <li>
 	<div>
@@ -50,31 +53,34 @@ let htmlBreadcrumb = `
 	</div>
 </li>`;
 currentPath.split('/').forEach((folder, index, array) => {
-	if(index !== 0 && index !== array.length - 1)
-		htmlBreadcrumb += `
-			<li>
-				<div class="flex items-center">
-					<svg class="h-5 w-5 flex-shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-						<path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
-					</svg>
-					<a href="#" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">${folder}</a>
-				</div>
-			</li>
-		`;
+	if(!(index !== 0 && index !== array.length - 1)) return;
+	displayedFiles = displayedFiles[folder];
+	htmlBreadcrumb += `
+		<li>
+			<div class="flex items-center">
+				<svg class="h-5 w-5 flex-shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+					<path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+				</svg>
+				<a href="#" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">${folder}</a>
+			</div>
+		</li>
+	`;
 });
 if(breadcrumb) breadcrumb.innerHTML = htmlBreadcrumb;
 
 let htmlFiles = '';
-files.forEach(file => {
-	htmlFiles += `
+Object.keys(displayedFiles).forEach(name => {
+	let value = displayedFiles[name];
+	if(typeof(value.LastModified) === 'string' && typeof(value.Size) === 'number'){
+		htmlFiles += `
 		<li class="flex items-center justify-between px-4 py-4 sm:px-0">
 			<div class="flex items-center space-x-2">
 				${getIcon('photo', 'text-red-600')}
-				<span>${file.Key}</span>
+				<span>${name}</span>
 			</div>
 			<div class="flex items-center space-x-4">
-				<span class="text-sm">${formatLastModified(file.LastModified)}</span>
-				<span class="text-sm">${formatBytes(file.Size)}</span>
+				<span class="text-sm">${formatLastModified(value.LastModified)}</span>
+				<span class="text-sm">${formatBytes(value.Size)}</span>
 				<div x-data="{ open: false }" @click.away="open = false" class="relative">
 					<button class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
 						${getIcon('dots-vertical')}
@@ -90,6 +96,33 @@ files.forEach(file => {
 			</div>
 		</li>
 	`;
+	}else{
+		const folder = getFolderMetadata(value);
+		htmlFiles += `
+			<li class="flex items-center justify-between px-4 py-4 sm:px-0">
+				<div class="flex items-center space-x-2">
+					${getIcon('folder', 'secondaryColor')}
+					<span>${name}</span>
+				</div>
+				<div class="flex items-center space-x-4">
+					<span class="text-sm">${formatLastModified(folder.LastModified)}</span>
+					<span class="text-sm">${formatBytes(folder.Size)}</span>
+					<div x-data="{ open: false }" @click.away="open = false" class="relative">
+						<button class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
+							${getIcon('dots-vertical')}
+						</button>
+						<div class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg">
+							<ul class="py-1">
+								<li><a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Download</a></li>
+								<li><a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Rename</a></li>
+								<li><a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Delete</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</li>
+		`;
+	}
 });
 if(fileManager) fileManager.innerHTML = htmlFiles;
 
