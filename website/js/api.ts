@@ -26,8 +26,7 @@ export default class Cloudky{
 				throw 'server_unreachable';
 			}
 
-			const response = await result.text();
-			return JSON.parse(response);
+			return await result.json();
 		}catch{
 			throw 'server_unreachable';
 		}
@@ -57,8 +56,7 @@ export default class Cloudky{
 				throw 'server_unreachable';
 			}
 
-			const response = await result.text();
-			return JSON.parse(response);
+			return await result.json();
 		}catch{
 			throw 'server_unreachable';
 		}
@@ -82,8 +80,7 @@ export default class Cloudky{
 				throw 'server_unreachable';
 			}
 
-			const response = await result.text();
-			return JSON.parse(response);
+			return await result.json();
 		}catch{
 			throw 'server_unreachable';
 		}
@@ -107,8 +104,7 @@ export default class Cloudky{
 				throw 'server_unreachable';
 			}
 
-			const response = await result.text();
-			return JSON.parse(response);
+			return await result.json();
 		}catch{
 			throw 'server_unreachable';
 		}
