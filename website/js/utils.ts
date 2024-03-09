@@ -212,11 +212,13 @@ export function isSessionValid(): boolean{
 	let logged = localStorage.getItem('logged');
 	let accountType = localStorage.getItem('account-type');
 	let debugMode = localStorage.getItem('debug-mode');
+	let currentPath = localStorage.getItem('current-path');
 	let sessionDuration = localStorage.getItem('session-duration');
 
 	if(logged === null) return false;
 	if(accountType === null) return false;
 	if(debugMode === null) localStorage.setItem('debug-mode', 'false');
+	if(currentPath === null) localStorage.setItem('current-path', '/');
 	if(sessionDuration === null){
 		localStorage.setItem('session-duration', '60');
 		sessionDuration = '60';
