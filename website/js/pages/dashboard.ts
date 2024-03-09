@@ -1,5 +1,4 @@
-import { getIcon } from "../icons";
-import { clearStorage, fhide, formatBytes, fshow, hash, initializeSession, isSessionValid, isfHidden, type CFile, formatLastModified, filesToNestedObject, getFolderMetadata } from "../utils";
+import { clearStorage, fhide, formatBytes, fshow, hash, initializeSession, isSessionValid, isfHidden, type CFile, formatLastModified, filesToNestedObject, getFolderMetadata, refreshFileManager, refreshBreadcrumb, getDisplayedFiles } from "../utils";
 
 const sidebar = document.getElementById('sidebar');
 const sidebarMenuBackdrop = document.getElementById('sidebar-menu-backdrop');
@@ -39,92 +38,19 @@ const avatar = document.getElementById('avatar') as HTMLImageElement;
 avatar.src = `https://gravatar.com/avatar/${await hash(email || '')}`;
 
 let sortedFiles = filesToNestedObject(files);
-let displayedFiles = sortedFiles;
 
-let htmlBreadcrumb = `
-<li>
-	<div>
-		<a href="#" class="text-gray-400 hover:text-gray-500">
-			<svg class="h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-				<path fill-rule="evenodd" d="M9.293 2.293a1 1 0 011.414 0l7 7A1 1 0 0117 11h-1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-3a1 1 0 00-1-1H9a1 1 0 00-1 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6H3a1 1 0 01-.707-1.707l7-7z" clip-rule="evenodd" />
-			</svg>
-			<span class="sr-only">Home</span>
-		</a>
-	</div>
-</li>`;
-currentPath.split('/').forEach((folder, index, array) => {
-	if(!(index !== 0 && index !== array.length - 1)) return;
-	displayedFiles = displayedFiles[folder];
-	htmlBreadcrumb += `
-		<li>
-			<div class="flex items-center">
-				<svg class="h-5 w-5 flex-shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-					<path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
-				</svg>
-				<a href="#" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">${folder}</a>
-			</div>
-		</li>
-	`;
-});
-if(breadcrumb) breadcrumb.innerHTML = htmlBreadcrumb;
+(window as any).handleBreadcrumbClick = function(path: string) {
+	path += '/';
+	let currentPath = localStorage.getItem('current-path') || '/';
+	if(currentPath === path) return;
 
-let htmlFiles = '';
-Object.keys(displayedFiles).forEach(name => {
-	let value = displayedFiles[name];
-	if(typeof(value.LastModified) === 'string' && typeof(value.Size) === 'number'){
-		htmlFiles += `
-		<li class="flex items-center justify-between px-4 py-4 sm:px-0">
-			<div class="flex items-center space-x-2">
-				${getIcon('photo', 'text-red-600')}
-				<span>${name}</span>
-			</div>
-			<div class="flex items-center space-x-4">
-				<span class="text-sm">${formatLastModified(value.LastModified)}</span>
-				<span class="text-sm">${formatBytes(value.Size)}</span>
-				<div x-data="{ open: false }" @click.away="open = false" class="relative">
-					<button class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
-						${getIcon('dots-vertical')}
-					</button>
-					<div class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg">
-						<ul class="py-1">
-							<li><a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Download</a></li>
-							<li><a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Rename</a></li>
-							<li><a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Delete</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</li>
-	`;
-	}else{
-		const folder = getFolderMetadata(value);
-		htmlFiles += `
-			<li class="flex items-center justify-between px-4 py-4 sm:px-0">
-				<div class="flex items-center space-x-2">
-					${getIcon('folder', 'secondaryColor')}
-					<span>${name}</span>
-				</div>
-				<div class="flex items-center space-x-4">
-					<span class="text-sm">${formatLastModified(folder.LastModified)}</span>
-					<span class="text-sm">${formatBytes(folder.Size)}</span>
-					<div x-data="{ open: false }" @click.away="open = false" class="relative">
-						<button class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
-							${getIcon('dots-vertical')}
-						</button>
-						<div class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg">
-							<ul class="py-1">
-								<li><a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Download</a></li>
-								<li><a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Rename</a></li>
-								<li><a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Delete</a></li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</li>
-		`;
-	}
-});
-if(fileManager) fileManager.innerHTML = htmlFiles;
+	localStorage.setItem('current-path', path);
+	refreshBreadcrumb(sortedFiles);
+	refreshFileManager(getDisplayedFiles(sortedFiles));
+};
+
+refreshBreadcrumb(sortedFiles);
+refreshFileManager(sortedFiles);
 
 sidebarCloseButton?.addEventListener('click', () => {
 	if(!sidebar) return;
