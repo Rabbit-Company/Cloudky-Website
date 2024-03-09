@@ -134,6 +134,32 @@ export function formatBytes(bytes: number, decimals: number = 2): string {
 	return parseFloat((bytes / Math.pow(k, i)).toFixed(decimals)) + ' ' + sizes[i];
 }
 
+export function formatLastModified(timestamp: string): string {
+	const date = new Date(timestamp);
+	const currentDate = new Date();
+
+	const timeDiff = currentDate.getTime() - date.getTime();
+	const dayDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
+
+	if(dayDiff === 0){
+		const options: Intl.DateTimeFormatOptions = {
+			hour: '2-digit',
+			minute: '2-digit',
+			second: '2-digit'
+		};
+		return date.toLocaleTimeString('en-US', options);
+	}else if (dayDiff <= 7){
+		return `${dayDiff} days ago`;
+	}else{
+		const options: Intl.DateTimeFormatOptions = {
+			year: 'numeric',
+			month: 'short',
+			day: '2-digit'
+		};
+		return date.toLocaleDateString('en-US', options);
+	}
+}
+
 export async function getDebugInfo(): Promise<string>{
 	let blake2b: boolean = false;
 	let argon2id: number = 0;
@@ -251,4 +277,10 @@ export async function getFileList(server: string, username: string, token: strin
 		return true;
 	}catch{}
 	return false;
+}
+
+export interface CFile{
+	Key: string;
+	LastModified: string;
+	Size: number;
 }

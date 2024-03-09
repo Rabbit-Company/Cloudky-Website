@@ -1,4 +1,5 @@
-import { clearStorage, fhide, formatBytes, fshow, hash, initializeSession, isSessionValid, isfHidden } from "../utils";
+import { getIcon } from "../icons";
+import { clearStorage, fhide, formatBytes, fshow, hash, initializeSession, isSessionValid, isfHidden, type CFile, formatLastModified } from "../utils";
 
 const sidebar = document.getElementById('sidebar');
 const sidebarMenuBackdrop = document.getElementById('sidebar-menu-backdrop');
@@ -11,6 +12,7 @@ const profileUsername = document.getElementById('profile-username');
 const signoutButton = document.getElementById('signout-btn');
 const sidebarStorage = document.getElementById('sidebar-storage');
 const mobileSidebarStorage = document.getElementById('mobile-sidebar-storage');
+const fileManager = document.getElementById('file-manager');
 
 initializeSession();
 
@@ -18,6 +20,7 @@ const server = localStorage.getItem('server');
 const username = localStorage.getItem('username');
 const token = localStorage.getItem('token');
 
+const files = JSON.parse(localStorage.getItem('files') || '[]') as Array<CFile>;
 const email = localStorage.getItem('email');
 const storageUsed = localStorage.getItem('storage-used');
 const storageLimit = localStorage.getItem('storage-limit');
@@ -32,6 +35,35 @@ if(mobileSidebarStorage) mobileSidebarStorage.innerText = `${formatBytes(Number(
 
 const avatar = document.getElementById('avatar') as HTMLImageElement;
 avatar.src = `https://gravatar.com/avatar/${await hash(email || '')}`;
+
+let htmlFiles = '';
+files.forEach(file => {
+	htmlFiles += `
+		<li class="flex items-center justify-between px-4 py-4 sm:px-0">
+			<div class="flex items-center space-x-2">
+				${getIcon('photo', 'text-red-600')}
+				<span>${file.Key}</span>
+			</div>
+			<div class="flex items-center space-x-4">
+				<span class="text-sm">${formatLastModified(file.LastModified)}</span>
+				<span class="text-sm">${formatBytes(file.Size)}</span>
+				<div x-data="{ open: false }" @click.away="open = false" class="relative">
+					<button class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
+						${getIcon('dots-vertical')}
+					</button>
+					<div class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg">
+						<ul class="py-1">
+							<li><a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Download</a></li>
+							<li><a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Rename</a></li>
+							<li><a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Delete</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</li>
+	`;
+});
+if(fileManager) fileManager.innerHTML = htmlFiles;
 
 sidebarCloseButton?.addEventListener('click', () => {
 	if(!sidebar) return;
