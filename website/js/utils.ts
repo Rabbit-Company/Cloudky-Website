@@ -386,8 +386,8 @@ export function refreshFileManager(files: Record<string, any>){
 	const fileManager = document.getElementById('file-manager');
 	if(!fileManager) return;
 
-	let Folders = {} as Record<string, any>;
-	let Files = {} as Record<string, any>;
+	let Folders: Record<string, any> = {};
+	let Files: Record<string, any> = {};
 
 	// Separate folders and files
 	Object.keys(files).forEach(name => {
