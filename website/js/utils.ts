@@ -288,6 +288,15 @@ export interface CFile{
 	Size: number;
 }
 
+export enum SORT{
+	NAME_ASC = 'name-asc',
+	NAME_DESC = 'name-desc',
+	MODIFIED_ASC = 'modified-asc',
+	MODIFIED_DESC = 'modified-desc',
+	SIZE_ASC = 'size-asc',
+	SIZE_DESC = 'size-desc'
+}
+
 export function filesToNestedObject(files: CFile[]): Record<string, any> {
 	const result: Record<string, any> = {};
 
@@ -373,6 +382,7 @@ export function refreshBreadcrumb(files: Record<string, any>){
 
 export function refreshFileManager(files: Record<string, any>){
 	const currentPath = localStorage.getItem('current-path') || '/';
+	const sorting = localStorage.getItem('sorting') as SORT || SORT.NAME_ASC;
 	const fileManager = document.getElementById('file-manager');
 	if(!fileManager) return;
 
@@ -390,8 +400,8 @@ export function refreshFileManager(files: Record<string, any>){
 	});
 
 	// Sort folders and files
-	let sortedFolders = Object.keys(Folders).sort();
-	let sortedFiles = Object.keys(Files).sort();
+	let sortedFolders = sortFolders(Folders, sorting);
+	let sortedFiles = sortFiles(Files, sorting);
 
 	let htmlFiles = '';
 	sortedFolders.forEach(name => {
@@ -449,4 +459,43 @@ export function getDisplayedFiles(sortedFiles: Record<string, any>): Record<stri
 	});
 
 	return displayedFiles;
+}
+
+export function sortFiles(files: Record<string, any>, order: SORT): Array<string>{
+	switch (order) {
+		case SORT.NAME_DESC:
+			return Object.keys(files).sort((name1, name2) => name2.localeCompare(name1));
+		case SORT.MODIFIED_ASC:
+			return Object.keys(files).sort((name1, name2) => files[name1].LastModified.localeCompare(files[name2].LastModified));
+		case SORT.MODIFIED_DESC:
+			return Object.keys(files).sort((name1, name2) => files[name2].LastModified.localeCompare(files[name1].LastModified));
+		case SORT.SIZE_ASC:
+			return Object.keys(files).sort((name1, name2) => files[name1].Size - files[name2].Size);
+		case SORT.SIZE_DESC:
+			return Object.keys(files).sort((name1, name2) => files[name2].Size - files[name1].Size);
+		default:
+			return Object.keys(files).sort((name1, name2) => name1.localeCompare(name2));
+	}
+}
+
+export function sortFolders(folders: Record<string, any>, order: SORT): Array<string>{
+	let folderMetadata: Record<string, any> = {};
+	Object.keys(folders).forEach(name => {
+		folderMetadata[name] = getFolderMetadata(folders[name]);
+	});
+
+	switch (order) {
+		case SORT.NAME_DESC:
+			return Object.keys(folders).sort((name1, name2) => name2.localeCompare(name1));
+		case SORT.MODIFIED_ASC:
+			return Object.keys(folders).sort((name1, name2) => folderMetadata[folders[name1]].LastModified.localeCompare(folderMetadata[folders[name2]].LastModified));
+		case SORT.MODIFIED_DESC:
+			return Object.keys(folders).sort((name1, name2) => folderMetadata[folders[name2]].LastModified.localeCompare(folderMetadata[folders[name1]].LastModified));
+		case SORT.SIZE_ASC:
+			return Object.keys(folders).sort((name1, name2) => folderMetadata[folders[name1]].Size - folderMetadata[folders[name2]].Size);
+		case SORT.SIZE_DESC:
+			return Object.keys(folders).sort((name1, name2) => folderMetadata[folders[name2]].Size - folderMetadata[folders[name1]].Size);
+		default:
+			return Object.keys(folders).sort((name1, name2) => name1.localeCompare(name2));
+	}
 }
