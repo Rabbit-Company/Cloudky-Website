@@ -192,7 +192,7 @@ export async function getDebugInfo(): Promise<string>{
 	`.replaceAll('\t', '').trimStart().trimEnd();
 }
 
-export function clearStorage(items: string[] = ['token', 'hash', 'files', 'logged', 'email', 'storage-used', 'storage-limit', 'storage-type', 'account-type', 'created']){
+export function clearStorage(items: string[] = ['token', 'hash', 'files', 'sorted-files', 'sorted-folders', 'current-path', 'displayed-files', 'logged', 'email', 'storage-used', 'storage-limit', 'storage-type', 'account-type', 'created']){
 	items.forEach(variable => localStorage.removeItem(variable));
 }
 
@@ -380,7 +380,7 @@ export function refreshBreadcrumb(files: Record<string, any>){
 	breadcrumb.innerHTML = htmlBreadcrumb;
 }
 
-export function refreshFileManager(files: Record<string, any>){
+export function refreshFileManager(files: Record<string, any>, displayFiles: number = 20){
 	const currentPath = localStorage.getItem('current-path') || '/';
 	const sorting = localStorage.getItem('sorting') as SORT || SORT.NAME_ASC;
 	const fileManager = document.getElementById('file-manager');
@@ -400,11 +400,14 @@ export function refreshFileManager(files: Record<string, any>){
 	});
 
 	// Sort folders and files
-	let sortedFolders = sortFolders(Folders, sorting);
-	let sortedFiles = sortFiles(Files, sorting);
+	let sortedFolders: string[] = sortFolders(Folders, sorting);
+	let sortedFiles: string[] = sortFiles(Files, sorting);
 
 	let htmlFiles = '';
+	let displayedFiles = 0;
 	sortedFolders.forEach(name => {
+		if(displayedFiles >= displayFiles) return;
+
 		const folder = getFolderMetadata(files[name]);
 
 		htmlFiles += `
@@ -424,29 +427,97 @@ export function refreshFileManager(files: Record<string, any>){
 				</td>
 			</tr>
 		`;
+
+		displayedFiles++;
 	});
 
 	sortedFiles.forEach(name => {
+		if(displayedFiles >= displayFiles) return;
 		htmlFiles += `
-		<tr>
-			<td class="secondaryColor whitespace-nowrap py-0 pl-4 pr-3 text-sm font-medium">
-				<div class="flex items-center space-x-2">
-					${getIcon('photo', 'text-red-600')}
-					<span>${name}</span>
-				</div>
-			</td>
-			<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatLastModified(files[name].LastModified)}</td>
-			<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatBytes(files[name].Size)}</td>
-			<td class="relative whitespace-nowrap py-0 pl-3 pr-4 text-right text-sm sm:pr-0">
-				<button class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
-					${getIcon('dots-vertical')}
-				</button>
-			</td>
-		</tr>
-	`;
+			<tr>
+				<td class="secondaryColor whitespace-nowrap py-0 pl-4 pr-3 text-sm font-medium">
+					<div class="flex items-center space-x-2">
+						${getIcon('photo', 'text-red-600')}
+						<span>${name}</span>
+					</div>
+				</td>
+				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatLastModified(files[name].LastModified)}</td>
+				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatBytes(files[name].Size)}</td>
+				<td class="relative whitespace-nowrap py-0 pl-3 pr-4 text-right text-sm sm:pr-0">
+					<button class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
+						${getIcon('dots-vertical')}
+					</button>
+				</td>
+			</tr>
+		`;
+		displayedFiles++;
 	});
 
+	localStorage.setItem('displayed-files', displayedFiles.toString());
+	localStorage.setItem('sorted-files', JSON.stringify(sortedFiles));
+	localStorage.setItem('sorted-folders', JSON.stringify(sortedFolders));
 	fileManager.innerHTML = htmlFiles;
+}
+
+export function loadMoreFiles(files: Record<string, any>, amount = 20){
+	let displayedFiles: number = Number(localStorage.getItem('displayed-files')) || 20;
+	const currentPath = localStorage.getItem('current-path') || '/';
+	const sortedFolders: string[] = JSON.parse(localStorage.getItem('sorted-folders') || '[]') || [];
+	const sortedFiles: string[] = JSON.parse(localStorage.getItem('sorted-files') || '[]') || [];
+	const fileManager = document.getElementById('file-manager');
+	if(!fileManager) return;
+
+	let htmlFiles = '';
+	const totalAllowed = displayedFiles + amount;
+	for(let i = displayedFiles; i < sortedFolders.length; i++){
+		if(displayedFiles >= totalAllowed) break;
+		const name = sortedFolders[i];
+		const folder = getFolderMetadata(files[name]);
+		htmlFiles += `
+			<tr>
+				<td class="secondaryColor whitespace-nowrap py-0 pl-4 pr-3 text-sm font-medium cursor-pointer" onclick="handleBreadcrumbClick('${currentPath}${name}'); return false;">
+					<div class="flex items-center space-x-2">
+						${getIcon('folder', 'secondaryColor')}
+						<span>${name}</span>
+					</div>
+				</td>
+				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatLastModified(folder.LastModified)}</td>
+				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatBytes(folder.Size)}</td>
+				<td class="relative whitespace-nowrap py-0 pl-3 pr-4 text-right text-sm sm:pr-0">
+					<button class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
+						${getIcon('dots-vertical')}
+					</button>
+				</td>
+			</tr>
+		`;
+		displayedFiles++;
+	}
+
+	for(let i = displayedFiles; i < sortedFiles.length; i++){
+		if(displayedFiles >= totalAllowed) break;
+		const name = sortedFiles[i];
+		htmlFiles += `
+			<tr>
+				<td class="secondaryColor whitespace-nowrap py-0 pl-4 pr-3 text-sm font-medium">
+					<div class="flex items-center space-x-2">
+						${getIcon('photo', 'text-red-600')}
+						<span>${name}</span>
+					</div>
+				</td>
+				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatLastModified(files[name].LastModified)}</td>
+				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatBytes(files[name].Size)}</td>
+				<td class="relative whitespace-nowrap py-0 pl-3 pr-4 text-right text-sm sm:pr-0">
+					<button class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
+						${getIcon('dots-vertical')}
+					</button>
+				</td>
+			</tr>
+		`;
+		displayedFiles++;
+	}
+
+	localStorage.setItem('displayed-files', displayedFiles.toString());
+	fileManager.innerHTML += htmlFiles;
 }
 
 export function getDisplayedFiles(sortedFiles: Record<string, any>): Record<string, any>{

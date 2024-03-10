@@ -1,5 +1,5 @@
 import { getIcon } from "../icons";
-import { clearStorage, fhide, formatBytes, fshow, hash, initializeSession, isSessionValid, isfHidden, type CFile, formatLastModified, filesToNestedObject, getFolderMetadata, refreshFileManager, refreshBreadcrumb, getDisplayedFiles, updateSortIcons } from "../utils";
+import { clearStorage, fhide, formatBytes, fshow, hash, initializeSession, isSessionValid, isfHidden, type CFile, formatLastModified, filesToNestedObject, getFolderMetadata, refreshFileManager, refreshBreadcrumb, getDisplayedFiles, updateSortIcons, loadMoreFiles } from "../utils";
 
 const sidebar = document.getElementById('sidebar');
 const sidebarMenuBackdrop = document.getElementById('sidebar-menu-backdrop');
@@ -66,6 +66,11 @@ let sortedFiles = filesToNestedObject(files);
 	refreshBreadcrumb(sortedFiles);
 	refreshFileManager(getDisplayedFiles(sortedFiles));
 };
+
+// Infinite scroll
+window.addEventListener('scroll', () => {
+	if(window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - (document.documentElement.scrollHeight / 10)) loadMoreFiles(getDisplayedFiles(sortedFiles), 20);
+});
 
 refreshBreadcrumb(sortedFiles);
 refreshFileManager(sortedFiles);
