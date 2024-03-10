@@ -376,61 +376,64 @@ export function refreshFileManager(files: Record<string, any>){
 	const fileManager = document.getElementById('file-manager');
 	if(!fileManager) return;
 
-	let htmlFiles = '';
+	let Folders = {} as Record<string, any>;
+	let Files = {} as Record<string, any>;
+
+	// Separate folders and files
 	Object.keys(files).forEach(name => {
 		let value = files[name];
 		if(typeof(value.LastModified) === 'string' && typeof(value.Size) === 'number'){
-			htmlFiles += `
-			<li class="flex items-center justify-between px-4 py-4 sm:px-0">
-				<div class="flex items-center space-x-2">
-					${getIcon('photo', 'text-red-600')}
-					<span>${name}</span>
-				</div>
-				<div class="flex items-center space-x-4">
-					<span class="text-sm">${formatLastModified(value.LastModified)}</span>
-					<span class="text-sm">${formatBytes(value.Size)}</span>
-					<div x-data="{ open: false }" @click.away="open = false" class="relative">
-						<button class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
-							${getIcon('dots-vertical')}
-						</button>
-						<div class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg">
-							<ul class="py-1">
-								<li><a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Download</a></li>
-								<li><a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Rename</a></li>
-								<li><a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Delete</a></li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</li>
-		`;
-		}else{
-			const folder = getFolderMetadata(value);
-			htmlFiles += `
-				<li class="flex items-center justify-between px-4 py-4 sm:px-0">
+			Files[name] = value;
+			return;
+		}
+		Folders[name] = value;
+	});
+
+	// Sort folders and files
+	let sortedFolders = Object.keys(Folders).sort();
+	let sortedFiles = Object.keys(Files).sort();
+
+	let htmlFiles = '';
+	sortedFolders.forEach(name => {
+		const folder = getFolderMetadata(files[name]);
+
+		htmlFiles += `
+			<tr>
+				<td class="secondaryColor whitespace-nowrap py-0 pl-4 pr-3 text-sm font-medium">
 					<div class="flex items-center space-x-2 cursor-pointer" onclick="handleBreadcrumbClick('${currentPath}${name}'); return false;">
 						${getIcon('folder', 'secondaryColor')}
 						<span>${name}</span>
 					</div>
-					<div class="flex items-center space-x-4">
-						<span class="text-sm">${formatLastModified(folder.LastModified)}</span>
-						<span class="text-sm">${formatBytes(folder.Size)}</span>
-						<div x-data="{ open: false }" @click.away="open = false" class="relative">
-							<button class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
-								${getIcon('dots-vertical')}
-							</button>
-							<div class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg">
-								<ul class="py-1">
-									<li><a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Download</a></li>
-									<li><a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Rename</a></li>
-									<li><a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Delete</a></li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</li>
-			`;
-		}
+				</td>
+				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatLastModified(folder.LastModified)}</td>
+				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatBytes(folder.Size)}</td>
+				<td class="relative whitespace-nowrap py-0 pl-3 pr-4 text-right text-sm sm:pr-0">
+					<button class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
+						${getIcon('dots-vertical')}
+					</button>
+				</td>
+			</tr>
+		`;
+	});
+
+	sortedFiles.forEach(name => {
+		htmlFiles += `
+		<tr>
+			<td class="secondaryColor whitespace-nowrap py-0 pl-4 pr-3 text-sm font-medium">
+				<div class="flex items-center space-x-2">
+					${getIcon('photo', 'text-red-600')}
+					<span>${name}</span>
+				</div>
+			</td>
+			<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatLastModified(files[name].LastModified)}</td>
+			<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatBytes(files[name].Size)}</td>
+			<td class="relative whitespace-nowrap py-0 pl-3 pr-4 text-right text-sm sm:pr-0">
+				<button class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
+					${getIcon('dots-vertical')}
+				</button>
+			</td>
+		</tr>
+	`;
 	});
 
 	fileManager.innerHTML = htmlFiles;
