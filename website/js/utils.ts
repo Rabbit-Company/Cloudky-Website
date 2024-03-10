@@ -499,3 +499,25 @@ export function sortFolders(folders: Record<string, any>, order: SORT): Array<st
 			return Object.keys(folders).sort((name1, name2) => name1.localeCompare(name2));
 	}
 }
+
+export function updateSortIcons(){
+	let sorting = localStorage.getItem('sorting') || 'name-asc';
+
+	['name', 'modified', 'size'].forEach(name => {
+		const sortIcon = document.getElementById(`sort-icon-${name}`);
+		if(!sortIcon) return;
+
+		if(sorting.includes('desc')){
+			sortIcon.innerHTML = getIcon('sort-descending');
+		}else{
+			sortIcon.innerHTML = getIcon('sort-ascending');
+		}
+
+		if(!sorting.includes(name)){
+			sortIcon.className = 'invisible ml-2 flex-none rounded text-gray-400 group-hover:visible group-focus:visible';
+			return;
+		}
+
+		sortIcon.className = 'ml-2 flex-none rounded bg-gray-700 text-gray-900';
+	});
+}

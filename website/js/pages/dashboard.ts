@@ -1,4 +1,5 @@
-import { clearStorage, fhide, formatBytes, fshow, hash, initializeSession, isSessionValid, isfHidden, type CFile, formatLastModified, filesToNestedObject, getFolderMetadata, refreshFileManager, refreshBreadcrumb, getDisplayedFiles } from "../utils";
+import { getIcon } from "../icons";
+import { clearStorage, fhide, formatBytes, fshow, hash, initializeSession, isSessionValid, isfHidden, type CFile, formatLastModified, filesToNestedObject, getFolderMetadata, refreshFileManager, refreshBreadcrumb, getDisplayedFiles, updateSortIcons } from "../utils";
 
 const sidebar = document.getElementById('sidebar');
 const sidebarMenuBackdrop = document.getElementById('sidebar-menu-backdrop');
@@ -37,6 +38,7 @@ if(mobileSidebarStorage) mobileSidebarStorage.innerText = `${formatBytes(Number(
 const avatar = document.getElementById('avatar') as HTMLImageElement;
 avatar.src = `https://gravatar.com/avatar/${await hash(email || '')}`;
 
+updateSortIcons();
 let sortedFiles = filesToNestedObject(files);
 
 (window as any).handleBreadcrumbClick = function(path: string) {
@@ -59,6 +61,8 @@ let sortedFiles = filesToNestedObject(files);
 	}
 
 	localStorage.setItem('sorting', newSorting);
+
+	updateSortIcons();
 	refreshBreadcrumb(sortedFiles);
 	refreshFileManager(getDisplayedFiles(sortedFiles));
 };
