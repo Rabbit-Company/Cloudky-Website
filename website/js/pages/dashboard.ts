@@ -49,6 +49,20 @@ let sortedFiles = filesToNestedObject(files);
 	refreshFileManager(getDisplayedFiles(sortedFiles));
 };
 
+(window as any).handleFileSortClick = function(sortName: string) {
+	let sorting = localStorage.getItem('sorting') || 'name-asc';
+	let desc = sorting.includes('-desc');
+
+	let newSorting = `${sortName}-asc`;
+	if(sorting.includes(sortName)){
+		if(!desc) newSorting = `${sortName}-desc`;
+	}
+
+	localStorage.setItem('sorting', newSorting);
+	refreshBreadcrumb(sortedFiles);
+	refreshFileManager(getDisplayedFiles(sortedFiles));
+};
+
 refreshBreadcrumb(sortedFiles);
 refreshFileManager(sortedFiles);
 

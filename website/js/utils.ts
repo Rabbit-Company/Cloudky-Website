@@ -488,13 +488,13 @@ export function sortFolders(folders: Record<string, any>, order: SORT): Array<st
 		case SORT.NAME_DESC:
 			return Object.keys(folders).sort((name1, name2) => name2.localeCompare(name1));
 		case SORT.MODIFIED_ASC:
-			return Object.keys(folders).sort((name1, name2) => folderMetadata[folders[name1]].LastModified.localeCompare(folderMetadata[folders[name2]].LastModified));
+			return Object.keys(folders).sort((name1, name2) => folderMetadata[name1].LastModified.localeCompare(folderMetadata[name2].LastModified));
 		case SORT.MODIFIED_DESC:
-			return Object.keys(folders).sort((name1, name2) => folderMetadata[folders[name2]].LastModified.localeCompare(folderMetadata[folders[name1]].LastModified));
+			return Object.keys(folders).sort((name1, name2) => folderMetadata[name2].LastModified.localeCompare(folderMetadata[name1].LastModified));
 		case SORT.SIZE_ASC:
-			return Object.keys(folders).sort((name1, name2) => folderMetadata[folders[name1]].Size - folderMetadata[folders[name2]].Size);
+			return Object.keys(folders).sort((name1, name2) => folderMetadata[name1].Size - folderMetadata[name2].Size);
 		case SORT.SIZE_DESC:
-			return Object.keys(folders).sort((name1, name2) => folderMetadata[folders[name2]].Size - folderMetadata[folders[name1]].Size);
+			return Object.keys(folders).sort((name1, name2) => folderMetadata[name2].Size - folderMetadata[name1].Size);
 		default:
 			return Object.keys(folders).sort((name1, name2) => name1.localeCompare(name2));
 	}
