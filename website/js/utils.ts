@@ -409,8 +409,8 @@ export function refreshFileManager(files: Record<string, any>){
 
 		htmlFiles += `
 			<tr>
-				<td class="secondaryColor whitespace-nowrap py-0 pl-4 pr-3 text-sm font-medium">
-					<div class="flex items-center space-x-2 cursor-pointer" onclick="handleBreadcrumbClick('${currentPath}${name}'); return false;">
+				<td class="secondaryColor whitespace-nowrap py-0 pl-4 pr-3 text-sm font-medium cursor-pointer" onclick="handleBreadcrumbClick('${currentPath}${name}'); return false;">
+					<div class="flex items-center space-x-2">
 						${getIcon('folder', 'secondaryColor')}
 						<span>${name}</span>
 					</div>
