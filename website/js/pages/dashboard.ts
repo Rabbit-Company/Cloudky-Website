@@ -14,6 +14,7 @@ const sidebarStorage = document.getElementById('sidebar-storage');
 const mobileSidebarStorage = document.getElementById('mobile-sidebar-storage');
 const fileManager = document.getElementById('file-manager');
 const breadcrumb = document.getElementById('breadcrumb');
+const searchField = document.getElementById('search-field') as HTMLInputElement;
 
 initializeSession();
 
@@ -46,6 +47,16 @@ let sortedFiles = filesToNestedObject(files);
 	let currentPath = localStorage.getItem('current-path') || '/';
 	if(currentPath === path) return;
 
+	const searchedFiles = localStorage.getItem('searched-files');
+	if(searchedFiles !== null){
+		let filteredSortedFiles: Record<string, any> = JSON.parse(searchedFiles);
+
+		localStorage.setItem('current-path', path);
+		refreshBreadcrumb(filteredSortedFiles);
+		refreshFileManager(getDisplayedFiles(filteredSortedFiles));
+		return;
+	}
+
 	localStorage.setItem('current-path', path);
 	refreshBreadcrumb(sortedFiles);
 	refreshFileManager(getDisplayedFiles(sortedFiles));
@@ -63,9 +74,39 @@ let sortedFiles = filesToNestedObject(files);
 	localStorage.setItem('sorting', newSorting);
 
 	updateSortIcons();
+
+	const searchedFiles = localStorage.getItem('searched-files');
+	if(searchedFiles !== null){
+		let filteredSortedFiles: Record<string, any> = JSON.parse(searchedFiles);
+		refreshBreadcrumb(filteredSortedFiles);
+		refreshFileManager(getDisplayedFiles(filteredSortedFiles));
+		return;
+	}
+
 	refreshBreadcrumb(sortedFiles);
 	refreshFileManager(getDisplayedFiles(sortedFiles));
 };
+
+searchField?.addEventListener('keyup', (e) => {
+	if(e.key !== 'Enter') return;
+
+	const keyword = searchField.value.toLowerCase();
+
+	if(keyword.trim().length === 0){
+		localStorage.removeItem('searched-files');
+		refreshBreadcrumb(sortedFiles);
+		refreshFileManager(getDisplayedFiles(sortedFiles));
+		return;
+	}
+
+	const searchedFiles = filesToNestedObject(files.filter((file) => file.Key.toLowerCase().includes(keyword)));
+
+	localStorage.setItem('current-path', '/');
+	localStorage.setItem('searched-files', JSON.stringify(searchedFiles));
+	updateSortIcons();
+	refreshBreadcrumb(searchedFiles);
+	refreshFileManager(searchedFiles);
+});
 
 // Infinite scroll
 window.addEventListener('scroll', () => {
