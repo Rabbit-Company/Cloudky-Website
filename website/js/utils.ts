@@ -135,7 +135,7 @@ export function formatBytes(bytes: number, decimals: number = 2): string {
 	return parseFloat((bytes / Math.pow(k, i)).toFixed(decimals)) + ' ' + sizes[i];
 }
 
-export function formatLastModified(timestamp: string): string {
+export function formatLastModified(timestamp: number): string {
 	const date = new Date(timestamp);
 	const currentDate = new Date();
 
@@ -284,7 +284,7 @@ export async function getFileList(server: string, username: string, token: strin
 
 export interface CFile{
 	Key: string;
-	LastModified: string;
+	Modified: number;
 	Size: number;
 }
 
@@ -314,7 +314,7 @@ export function filesToNestedObject(files: CFile[]): Record<string, any> {
 
 		const fileName = pathParts[pathParts.length - 1];
 		currentLevel[fileName] = {
-			LastModified: file.LastModified,
+			Modified: file.Modified,
 			Size: file.Size
 		};
 	});
@@ -322,27 +322,27 @@ export function filesToNestedObject(files: CFile[]): Record<string, any> {
 	return result;
 }
 
-export function getFolderMetadata(folder: Record<string, any>): { LastModified: string, Size: number }{
+export function getFolderMetadata(folder: Record<string, any>): { Modified: number, Size: number }{
 	let size = 0;
-	let lastModified = new Date('1970-01-01T00:00:00.000Z');
+	let lastModified = 0;
 	Object.keys(folder).forEach(name => {
 		let value = folder[name];
-		if(typeof(value.LastModified) === 'string' && typeof(value.Size) === 'number'){
+		if(typeof(value.Modified) === 'number' && typeof(value.Size) === 'number'){
 			size += value.Size;
-			if(lastModified.toISOString() < value.LastModified){
-				lastModified = new Date(value.LastModified);
+			if(lastModified < value.Modified){
+				lastModified = value.Modified;
 			}
 			return;
 		}
 
 		let newFolder = getFolderMetadata(value);
 		size += newFolder.Size;
-		if(lastModified.toISOString() < newFolder.LastModified){
-			lastModified = new Date(newFolder.LastModified);
+		if(lastModified < newFolder.Modified){
+			lastModified = newFolder.Modified;
 		}
 	});
 
-	return { LastModified: lastModified.toISOString(), Size: size };
+	return { Modified: lastModified, Size: size };
 }
 
 export function refreshBreadcrumb(files: Record<string, any>){
@@ -392,7 +392,7 @@ export function refreshFileManager(files: Record<string, any>, displayFiles: num
 	// Separate folders and files
 	Object.keys(files).forEach(name => {
 		let value = files[name];
-		if(typeof(value.LastModified) === 'string' && typeof(value.Size) === 'number'){
+		if(typeof(value.Modified) === 'number' && typeof(value.Size) === 'number'){
 			Files[name] = value;
 			return;
 		}
@@ -418,7 +418,7 @@ export function refreshFileManager(files: Record<string, any>, displayFiles: num
 						<span>${name}</span>
 					</div>
 				</td>
-				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatLastModified(folder.LastModified)}</td>
+				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatLastModified(folder.Modified)}</td>
 				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatBytes(folder.Size)}</td>
 				<td class="relative whitespace-nowrap py-0 pl-3 pr-4 text-right text-sm sm:pr-0">
 					<button class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
@@ -441,7 +441,7 @@ export function refreshFileManager(files: Record<string, any>, displayFiles: num
 						<span>${name}</span>
 					</div>
 				</td>
-				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatLastModified(files[name].LastModified)}</td>
+				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatLastModified(files[name].Modified)}</td>
 				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatBytes(files[name].Size)}</td>
 				<td class="relative whitespace-nowrap py-0 pl-3 pr-4 text-right text-sm sm:pr-0">
 					<button class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
@@ -481,7 +481,7 @@ export function loadMoreFiles(files: Record<string, any>, amount = 20){
 						<span>${name}</span>
 					</div>
 				</td>
-				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatLastModified(folder.LastModified)}</td>
+				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatLastModified(folder.Modified)}</td>
 				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatBytes(folder.Size)}</td>
 				<td class="relative whitespace-nowrap py-0 pl-3 pr-4 text-right text-sm sm:pr-0">
 					<button class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
@@ -504,7 +504,7 @@ export function loadMoreFiles(files: Record<string, any>, amount = 20){
 						<span>${name}</span>
 					</div>
 				</td>
-				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatLastModified(files[name].LastModified)}</td>
+				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatLastModified(files[name].Modified)}</td>
 				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatBytes(files[name].Size)}</td>
 				<td class="relative whitespace-nowrap py-0 pl-3 pr-4 text-right text-sm sm:pr-0">
 					<button class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
@@ -537,9 +537,9 @@ export function sortFiles(files: Record<string, any>, order: SORT): Array<string
 		case SORT.NAME_DESC:
 			return Object.keys(files).sort((name1, name2) => name2.localeCompare(name1));
 		case SORT.MODIFIED_ASC:
-			return Object.keys(files).sort((name1, name2) => files[name1].LastModified.localeCompare(files[name2].LastModified));
+			return Object.keys(files).sort((name1, name2) => files[name1].Modified - files[name2].Modified);
 		case SORT.MODIFIED_DESC:
-			return Object.keys(files).sort((name1, name2) => files[name2].LastModified.localeCompare(files[name1].LastModified));
+			return Object.keys(files).sort((name1, name2) => files[name2].Modified - files[name1].Modified);
 		case SORT.SIZE_ASC:
 			return Object.keys(files).sort((name1, name2) => files[name1].Size - files[name2].Size);
 		case SORT.SIZE_DESC:
@@ -559,9 +559,9 @@ export function sortFolders(folders: Record<string, any>, order: SORT): Array<st
 		case SORT.NAME_DESC:
 			return Object.keys(folders).sort((name1, name2) => name2.localeCompare(name1));
 		case SORT.MODIFIED_ASC:
-			return Object.keys(folders).sort((name1, name2) => folderMetadata[name1].LastModified.localeCompare(folderMetadata[name2].LastModified));
+			return Object.keys(folders).sort((name1, name2) => folderMetadata[name1].Modified - folderMetadata[name2].Modified);
 		case SORT.MODIFIED_DESC:
-			return Object.keys(folders).sort((name1, name2) => folderMetadata[name2].LastModified.localeCompare(folderMetadata[name1].LastModified));
+			return Object.keys(folders).sort((name1, name2) => folderMetadata[name2].Modified - folderMetadata[name1].Modified);
 		case SORT.SIZE_ASC:
 			return Object.keys(folders).sort((name1, name2) => folderMetadata[name1].Size - folderMetadata[name2].Size);
 		case SORT.SIZE_DESC:
