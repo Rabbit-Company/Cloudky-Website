@@ -404,8 +404,9 @@ export function refreshFileManager(files: Record<string, any>, displayFiles: num
 
 	let htmlFiles = '';
 	let displayedFiles = 0;
-	sortedFolders.forEach(name => {
-		if(displayedFiles >= displayFiles) return;
+	for(let i = 0; i < sortedFolders.length; i++){
+		if(displayedFiles >= displayFiles) break;
+		const name = sortedFolders[i];
 
 		const folder = getFolderMetadata(files[name]);
 
@@ -423,15 +424,24 @@ export function refreshFileManager(files: Record<string, any>, displayFiles: num
 					<button class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
 						${getIcon('dots-vertical')}
 					</button>
+					<div id="folder-${i+1}" class="hidden z-10 absolute right-0 mt-2 w-24 secondaryBackgroundColor rounded-lg shadow-lg">
+						<ul class="py-1">
+							<li><a href="#" class="mainMenuLink block px-4 py-2 text-sm">Download</a></li>
+							<li><a href="#" class="mainMenuLink block px-4 py-2 text-sm">Rename</a></li>
+							<li><a href="#" class="mainMenuLink block px-4 py-2 text-sm">Delete</a></li>
+						</ul>
+					</div>
 				</td>
 			</tr>
 		`;
 
 		displayedFiles++;
-	});
+	}
 
-	sortedFiles.forEach(name => {
-		if(displayedFiles >= displayFiles) return;
+	for(let i = 0; i < sortedFiles.length; i++){
+		if(displayedFiles >= displayFiles) break;
+		const name = sortedFiles[i];
+
 		htmlFiles += `
 			<tr>
 				<td class="secondaryColor whitespace-nowrap py-0 pl-4 pr-3 text-sm font-medium">
@@ -446,11 +456,18 @@ export function refreshFileManager(files: Record<string, any>, displayFiles: num
 					<button class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
 						${getIcon('dots-vertical')}
 					</button>
+					<div id="file-${i+1}" class="hidden z-10 absolute right-0 mt-2 w-24 secondaryBackgroundColor rounded-lg shadow-lg">
+						<ul class="py-1">
+							<li><a href="#" class="mainMenuLink block px-4 py-2 text-sm">Download</a></li>
+							<li><a href="#" class="mainMenuLink block px-4 py-2 text-sm">Rename</a></li>
+							<li><a href="#" class="mainMenuLink block px-4 py-2 text-sm">Delete</a></li>
+						</ul>
+					</div>
 				</td>
 			</tr>
 		`;
 		displayedFiles++;
-	});
+	}
 
 	localStorage.setItem('displayed-files', displayedFiles.toString());
 	localStorage.setItem('sorted-files', JSON.stringify(sortedFiles));
@@ -486,6 +503,13 @@ export function loadMoreFiles(files: Record<string, any>, amount = 20){
 					<button class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
 						${getIcon('dots-vertical')}
 					</button>
+					<div id="file-${i+1}" class="hidden z-10 absolute right-0 mt-2 w-24 secondaryBackgroundColor rounded-lg shadow-lg">
+						<ul class="py-1">
+							<li><a href="#" class="mainMenuLink block px-4 py-2 text-sm">Download</a></li>
+							<li><a href="#" class="mainMenuLink block px-4 py-2 text-sm">Rename</a></li>
+							<li><a href="#" class="mainMenuLink block px-4 py-2 text-sm">Delete</a></li>
+						</ul>
+					</div>
 				</td>
 			</tr>
 		`;
@@ -509,6 +533,13 @@ export function loadMoreFiles(files: Record<string, any>, amount = 20){
 					<button class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
 						${getIcon('dots-vertical')}
 					</button>
+					<div id="file-${i+1}" class="hidden z-10 absolute right-0 mt-2 w-24 secondaryBackgroundColor rounded-lg shadow-lg">
+						<ul class="py-1">
+							<li><a href="#" class="mainMenuLink block px-4 py-2 text-sm">Download</a></li>
+							<li><a href="#" class="mainMenuLink block px-4 py-2 text-sm">Rename</a></li>
+							<li><a href="#" class="mainMenuLink block px-4 py-2 text-sm">Delete</a></li>
+						</ul>
+					</div>
 				</td>
 			</tr>
 		`;
