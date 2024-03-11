@@ -137,9 +137,8 @@ export function formatBytes(bytes: number, decimals: number = 2): string {
 
 export function formatLastModified(timestamp: number): string {
 	const date = new Date(timestamp);
-	const currentDate = new Date();
 
-	const timeDiff = currentDate.getTime() - date.getTime();
+	const timeDiff = Date.now() - timestamp;
 	const dayDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
 
 	if(dayDiff === 0){
