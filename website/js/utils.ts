@@ -191,7 +191,7 @@ export async function getDebugInfo(): Promise<string>{
 	`.replaceAll('\t', '').trimStart().trimEnd();
 }
 
-export function clearStorage(items: string[] = ['token', 'hash', 'files', 'sorted-files', 'sorted-folders', 'current-path', 'displayed-files', 'logged', 'email', 'storage-used', 'storage-limit', 'storage-type', 'account-type', 'created']){
+export function clearStorage(items: string[] = ['token', 'hash', 'files', 'sorted-files', 'sorted-folders', 'searched-files', 'current-path', 'displayed-files', 'logged', 'email', 'storage-used', 'storage-limit', 'storage-type', 'account-type', 'created']){
 	items.forEach(variable => localStorage.removeItem(variable));
 }
 
