@@ -421,10 +421,10 @@ export function refreshFileManager(files: Record<string, any>, displayFiles: num
 				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatLastModified(folder.Modified)}</td>
 				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatBytes(folder.Size)}</td>
 				<td class="relative whitespace-nowrap py-0 pl-3 pr-4 text-right text-sm sm:pr-0">
-					<button class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
+					<button onclick="dropdownClick('folder-${i+1}')" class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
 						${getIcon('dots-vertical')}
 					</button>
-					<div id="folder-${i+1}" class="hidden z-10 absolute right-0 mt-2 w-24 secondaryBackgroundColor rounded-lg shadow-lg">
+					<div id="folder-${i+1}" class="hidden z-10 absolute right-0 mt-2 w-24 secondaryBackgroundColor rounded-lg shadow-lg" style="display: none">
 						<ul class="py-1">
 							<li><a href="#" class="mainMenuLink block px-4 py-2 text-sm">Download</a></li>
 							<li><a href="#" class="mainMenuLink block px-4 py-2 text-sm">Rename</a></li>
@@ -453,10 +453,10 @@ export function refreshFileManager(files: Record<string, any>, displayFiles: num
 				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatLastModified(files[name].Modified)}</td>
 				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatBytes(files[name].Size)}</td>
 				<td class="relative whitespace-nowrap py-0 pl-3 pr-4 text-right text-sm sm:pr-0">
-					<button class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
+					<button onclick="dropdownClick('file-${i+1}')" class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
 						${getIcon('dots-vertical')}
 					</button>
-					<div id="file-${i+1}" class="hidden z-10 absolute right-0 mt-2 w-24 secondaryBackgroundColor rounded-lg shadow-lg">
+					<div id="file-${i+1}" class="hidden z-10 absolute right-0 mt-2 w-24 secondaryBackgroundColor rounded-lg shadow-lg" style="display: none">
 						<ul class="py-1">
 							<li><a href="#" class="mainMenuLink block px-4 py-2 text-sm">Download</a></li>
 							<li><a href="#" class="mainMenuLink block px-4 py-2 text-sm">Rename</a></li>
@@ -500,10 +500,10 @@ export function loadMoreFiles(files: Record<string, any>, amount = 20){
 				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatLastModified(folder.Modified)}</td>
 				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatBytes(folder.Size)}</td>
 				<td class="relative whitespace-nowrap py-0 pl-3 pr-4 text-right text-sm sm:pr-0">
-					<button class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
+					<button onclick="dropdownClick('folder-${i+1}')" class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
 						${getIcon('dots-vertical')}
 					</button>
-					<div id="file-${i+1}" class="hidden z-10 absolute right-0 mt-2 w-24 secondaryBackgroundColor rounded-lg shadow-lg">
+					<div id="file-${i+1}" class="hidden z-10 absolute right-0 mt-2 w-24 secondaryBackgroundColor rounded-lg shadow-lg" syle="display: none">
 						<ul class="py-1">
 							<li><a href="#" class="mainMenuLink block px-4 py-2 text-sm">Download</a></li>
 							<li><a href="#" class="mainMenuLink block px-4 py-2 text-sm">Rename</a></li>
@@ -530,10 +530,10 @@ export function loadMoreFiles(files: Record<string, any>, amount = 20){
 				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatLastModified(files[name].Modified)}</td>
 				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatBytes(files[name].Size)}</td>
 				<td class="relative whitespace-nowrap py-0 pl-3 pr-4 text-right text-sm sm:pr-0">
-					<button class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
+					<button onclick="dropdownClick('file-${i+1}')" class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
 						${getIcon('dots-vertical')}
 					</button>
-					<div id="file-${i+1}" class="hidden z-10 absolute right-0 mt-2 w-24 secondaryBackgroundColor rounded-lg shadow-lg">
+					<div id="file-${i+1}" class="hidden z-10 absolute right-0 mt-2 w-24 secondaryBackgroundColor rounded-lg shadow-lg" style="display: none">
 						<ul class="py-1">
 							<li><a href="#" class="mainMenuLink block px-4 py-2 text-sm">Download</a></li>
 							<li><a href="#" class="mainMenuLink block px-4 py-2 text-sm">Rename</a></li>

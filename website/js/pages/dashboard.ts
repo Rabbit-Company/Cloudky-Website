@@ -87,6 +87,17 @@ let sortedFiles = filesToNestedObject(files);
 	refreshFileManager(getDisplayedFiles(sortedFiles));
 };
 
+(window as any).dropdownClick = (id: string) => {
+	const menu = document.getElementById(id);
+	if(!menu) return;
+
+	if(isfHidden(id)){
+		fshow(id);
+	}else{
+		fhide(id);
+	}
+};
+
 searchField?.addEventListener('keyup', (e) => {
 	if(e.key !== 'Enter') return;
 
