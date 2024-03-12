@@ -1,5 +1,5 @@
 import { getIcon } from "../icons";
-import { clearStorage, fhide, formatBytes, fshow, hash, initializeSession, isSessionValid, isfHidden, type CFile, formatLastModified, filesToNestedObject, getFolderMetadata, refreshFileManager, refreshBreadcrumb, getDisplayedFiles, updateSortIcons, loadMoreFiles } from "../utils";
+import { clearStorage, fhide, formatBytes, fshow, hash, initializeSession, isSessionValid, isfHidden, type CFile, formatLastModified, filesToNestedObject, getFolderMetadata, refreshFileManager, refreshBreadcrumb, getDisplayedFiles, updateSortIcons, loadMoreFiles, deleteFiles } from "../utils";
 
 const sidebar = document.getElementById('sidebar');
 const sidebarMenuBackdrop = document.getElementById('sidebar-menu-backdrop');
@@ -18,9 +18,9 @@ const searchField = document.getElementById('search-field') as HTMLInputElement;
 
 initializeSession();
 
-const server = localStorage.getItem('server');
-const username = localStorage.getItem('username');
-const token = localStorage.getItem('token');
+const server = localStorage.getItem('server') || '';
+const username = localStorage.getItem('username') || '';
+const token = localStorage.getItem('token') || '';
 
 const currentPath = localStorage.getItem('current-path') || '/';
 const files = JSON.parse(localStorage.getItem('files') || '[]') as Array<CFile>;
@@ -97,6 +97,13 @@ let sortedFiles = filesToNestedObject(files);
 		fhide(id);
 	}
 };
+
+(window as any).deleteFile = async (id: string) => {
+	// TODO: Show alert dialog and ask user again if he wants to delete this file
+	let deleted = await deleteFiles(server, username, token, [id]);
+	if(!deleted) return;
+	//TODO: After file has been successfully deleted from the server, remove it from a table as well
+}
 
 searchField?.addEventListener('keyup', (e) => {
 	if(e.key !== 'Enter') return;

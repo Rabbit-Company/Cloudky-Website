@@ -281,6 +281,15 @@ export async function getFileList(server: string, username: string, token: strin
 	return false;
 }
 
+export async function deleteFiles(server: string, username: string, token: string, paths: string[]): Promise<boolean>{
+	try{
+		let data = await Cloudky.deleteFiles(server, username, token, paths);
+		if(data.error !== 0) return false;
+		return true;
+	}catch{}
+	return false;
+}
+
 export interface CFile{
 	Key: string;
 	Modified: number;
@@ -460,7 +469,7 @@ export function refreshFileManager(files: Record<string, any>, displayFiles: num
 						<ul class="py-1">
 							<li><a href="#" class="mainMenuLink block px-4 py-2 text-sm">Download</a></li>
 							<li><a href="#" class="mainMenuLink block px-4 py-2 text-sm">Rename</a></li>
-							<li><a href="#" class="mainMenuLink block px-4 py-2 text-sm">Delete</a></li>
+							<li><a onclick="deleteFile('${currentPath}${name}')" class="mainMenuLink block px-4 py-2 text-sm">Delete</a></li>
 						</ul>
 					</div>
 				</td>
