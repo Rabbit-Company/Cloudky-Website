@@ -23,7 +23,7 @@ const username = localStorage.getItem('username') || '';
 const token = localStorage.getItem('token') || '';
 
 const currentPath = localStorage.getItem('current-path') || '/';
-const files = JSON.parse(localStorage.getItem('files') || '[]') as Array<CFile>;
+let files = JSON.parse(localStorage.getItem('files') || '[]') as Array<CFile>;
 const email = localStorage.getItem('email');
 const storageUsed = localStorage.getItem('storage-used');
 const storageLimit = localStorage.getItem('storage-limit');
@@ -100,9 +100,15 @@ let sortedFiles = filesToNestedObject(files);
 
 (window as any).deleteFile = async (id: string) => {
 	// TODO: Show alert dialog and ask user again if he wants to delete this file
+	id = id.slice(1);
 	let deleted = await deleteFiles(server, username, token, [id]);
 	if(!deleted) return;
-	//TODO: After file has been successfully deleted from the server, remove it from a table as well
+
+	const index = files.findIndex(file => file.Key === id);
+	if(index !== -1) files.splice(index, 1);
+
+	sortedFiles = filesToNestedObject(files);
+	refreshFileManager(getDisplayedFiles(sortedFiles));
 }
 
 searchField?.addEventListener('keyup', (e) => {
