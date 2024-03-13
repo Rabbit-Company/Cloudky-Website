@@ -261,8 +261,10 @@ export async function getAccountData(server: string, username: string, token: st
 		let data = await Cloudky.getAccountData(server, username, token);
 		if(data.error !== 0) return false;
 		localStorage.setItem('email', data.data.Email);
-		localStorage.setItem('transfer-used', data.data.TransferUsed);
-		localStorage.setItem('transfer-limit', data.data.TransferLimit);
+		localStorage.setItem('download-used', data.data.DownloadUsed);
+		localStorage.setItem('download-limit', data.data.DownloadLimit);
+		localStorage.setItem('upload-used', data.data.UploadUsed);
+		localStorage.setItem('upload-limit', data.data.UploadLimit);
 		localStorage.setItem('storage-used', data.data.StorageUsed);
 		localStorage.setItem('storage-limit', data.data.StorageLimit);
 		localStorage.setItem('storage-type', data.data.StorageType);
