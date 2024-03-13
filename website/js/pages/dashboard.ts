@@ -11,7 +11,15 @@ const profileDropdownButton = document.getElementById('profile-dropdown-btn');
 const profileUsername = document.getElementById('profile-username');
 const signoutButton = document.getElementById('signout-btn');
 const sidebarStorage = document.getElementById('sidebar-storage');
+const sidebarStorageDropdown = document.getElementById('sidebar-storage-dropdown');
+const sidebarStorageDownloadUpload = document.getElementById('sidebar-storage-download-upload');
+const sidebarDownload = document.getElementById('sidebar-download');
+const sidebarUpload = document.getElementById('sidebar-upload');
 const mobileSidebarStorage = document.getElementById('mobile-sidebar-storage');
+const mobileSidebarStorageDropdown = document.getElementById('mobile-sidebar-storage-dropdown');
+const mobileSidebarStorageDownloadUpload = document.getElementById('mobile-sidebar-storage-download-upload');
+const mobileSidebarDownload = document.getElementById('mobile-sidebar-download');
+const mobileSidebarUpload = document.getElementById('mobile-sidebar-upload');
 const fileManager = document.getElementById('file-manager');
 const breadcrumb = document.getElementById('breadcrumb');
 const searchField = document.getElementById('search-field') as HTMLInputElement;
@@ -27,6 +35,10 @@ let files = JSON.parse(localStorage.getItem('files') || '[]') as Array<CFile>;
 const email = localStorage.getItem('email');
 const storageUsed = localStorage.getItem('storage-used');
 const storageLimit = localStorage.getItem('storage-limit');
+const downloadUsed = localStorage.getItem('download-used');
+const downloadLimit = localStorage.getItem('download-limit');
+const uploadUsed = localStorage.getItem('upload-used');
+const uploadLimit = localStorage.getItem('upload-limit');
 const storageType = localStorage.getItem('storage-type');
 const accountType = localStorage.getItem('account-type');
 const created = localStorage.getItem('created');
@@ -35,6 +47,12 @@ if(profileUsername) profileUsername.innerText = username || '';
 
 if(sidebarStorage) sidebarStorage.innerText = `${formatBytes(Number(storageUsed) * 1048576)} of ${formatBytes(Number(storageLimit) * 1048576)} used`;
 if(mobileSidebarStorage) mobileSidebarStorage.innerText = `${formatBytes(Number(storageUsed) * 1048576)} of ${formatBytes(Number(storageLimit) * 1048576)} used`;
+
+if(sidebarDownload) sidebarDownload.innerText = `${formatBytes(Number(downloadUsed) * 1048576)} of ${formatBytes(Number(downloadLimit) * 1048576)} used`;
+if(mobileSidebarDownload) mobileSidebarDownload.innerText = `${formatBytes(Number(downloadUsed) * 1048576)} of ${formatBytes(Number(downloadLimit) * 1048576)} used`;
+
+if(sidebarUpload) sidebarUpload.innerText = `${formatBytes(Number(uploadUsed) * 1048576)} of ${formatBytes(Number(uploadLimit) * 1048576)} used`;
+if(mobileSidebarUpload) mobileSidebarUpload.innerText = `${formatBytes(Number(uploadUsed) * 1048576)} of ${formatBytes(Number(uploadLimit) * 1048576)} used`;
 
 const avatar = document.getElementById('avatar') as HTMLImageElement;
 avatar.src = `https://gravatar.com/avatar/${await hash(email || '')}`;
@@ -139,6 +157,22 @@ window.addEventListener('scroll', () => {
 
 refreshBreadcrumb(sortedFiles);
 refreshFileManager(sortedFiles);
+
+sidebarStorageDropdown?.addEventListener('click', () => {
+	if(isfHidden('sidebar-storage-download-upload')){
+		fshow('sidebar-storage-download-upload');
+	}else{
+		fhide('sidebar-storage-download-upload');
+	}
+});
+
+mobileSidebarStorageDropdown?.addEventListener('click', () => {
+	if(isfHidden('mobile-sidebar-storage-download-upload')){
+		fshow('mobile-sidebar-storage-download-upload');
+	}else{
+		fhide('mobile-sidebar-storage-download-upload');
+	}
+});
 
 sidebarCloseButton?.addEventListener('click', () => {
 	if(!sidebar) return;
