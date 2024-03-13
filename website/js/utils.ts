@@ -261,6 +261,8 @@ export async function getAccountData(server: string, username: string, token: st
 		let data = await Cloudky.getAccountData(server, username, token);
 		if(data.error !== 0) return false;
 		localStorage.setItem('email', data.data.Email);
+		localStorage.setItem('transfer-used', data.data.TransferUsed);
+		localStorage.setItem('transfer-limit', data.data.TransferLimit);
 		localStorage.setItem('storage-used', data.data.StorageUsed);
 		localStorage.setItem('storage-limit', data.data.StorageLimit);
 		localStorage.setItem('storage-type', data.data.StorageType);
