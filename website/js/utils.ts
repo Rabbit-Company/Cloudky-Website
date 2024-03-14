@@ -471,9 +471,9 @@ export function refreshFileManager(files: Record<string, any>, displayFiles: num
 					</button>
 					<div id="file-${i+1}" class="hidden z-10 absolute right-0 mt-2 w-24 secondaryBackgroundColor rounded-lg shadow-lg" style="display: none">
 						<ul class="py-1">
-							<li><a href="#" class="mainMenuLink block px-4 py-2 text-sm">Download</a></li>
-							<li><a href="#" class="mainMenuLink block px-4 py-2 text-sm">Rename</a></li>
-							<li><a onclick="deleteFile('${currentPath}${name}')" class="mainMenuLink block px-4 py-2 text-sm">Delete</a></li>
+							<li><a onclick="downloadFile('${currentPath}${name}')" class="mainMenuLink block px-4 py-2 text-sm cursor-pointer">Download</a></li>
+							<li><a href="#" class="mainMenuLink block px-4 py-2 text-sm cursor-pointer">Rename</a></li>
+							<li><a onclick="deleteFile('${currentPath}${name}')" class="mainMenuLink block px-4 py-2 text-sm cursor-pointer">Delete</a></li>
 						</ul>
 					</div>
 				</td>
@@ -548,9 +548,9 @@ export function loadMoreFiles(files: Record<string, any>, amount = 20){
 					</button>
 					<div id="file-${i+1}" class="hidden z-10 absolute right-0 mt-2 w-24 secondaryBackgroundColor rounded-lg shadow-lg" style="display: none">
 						<ul class="py-1">
-							<li><a href="#" class="mainMenuLink block px-4 py-2 text-sm">Download</a></li>
-							<li><a href="#" class="mainMenuLink block px-4 py-2 text-sm">Rename</a></li>
-							<li><a href="#" class="mainMenuLink block px-4 py-2 text-sm">Delete</a></li>
+							<li><a onclick="downloadFile('${currentPath}${name}')" class="mainMenuLink block px-4 py-2 text-sm cursor-pointer">Download</a></li>
+							<li><a href="#" class="mainMenuLink block px-4 py-2 text-sm cursor-pointer">Rename</a></li>
+							<li><a onclick="deleteFile('${currentPath}${name}')" class="mainMenuLink block px-4 py-2 text-sm cursor-pointer">Delete</a></li>
 						</ul>
 					</div>
 				</td>

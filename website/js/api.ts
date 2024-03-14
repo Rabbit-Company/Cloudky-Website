@@ -139,4 +139,33 @@ export default class Cloudky{
 		}
 	}
 
+	static async downloadFile(server: string, username: string, token: string, path: string): Promise<any> {
+		if(!Validate.url(server)) throw 'url_invalid';
+		if(!Validate.username(username)) throw '12';
+		if(!Validate.token(token)) throw '25';
+
+		try{
+			let headers = new Headers();
+			headers.append('Authorization', 'Basic ' + btoa(username + ":" + token));
+
+			const data = {
+				path: path
+			}
+
+			const result = await fetch(server + "/v1/file/download", {
+				method: "POST",
+				headers: headers,
+				body: JSON.stringify(data)
+			});
+
+			if (result.status !== 200 && result.status !== 429) {
+				throw 'server_unreachable';
+			}
+
+			return await result.blob();
+		}catch{
+			throw 'server_unreachable';
+		}
+	}
+
 }

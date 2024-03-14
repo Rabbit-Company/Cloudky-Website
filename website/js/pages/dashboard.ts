@@ -1,3 +1,4 @@
+import Cloudky from "../api";
 import { getIcon } from "../icons";
 import { clearStorage, fhide, formatBytes, fshow, hash, initializeSession, isSessionValid, isfHidden, type CFile, formatLastModified, filesToNestedObject, getFolderMetadata, refreshFileManager, refreshBreadcrumb, getDisplayedFiles, updateSortIcons, loadMoreFiles, deleteFiles } from "../utils";
 
@@ -115,6 +116,23 @@ let sortedFiles = filesToNestedObject(files);
 		fhide(id);
 	}
 };
+
+(window as any).downloadFile = async (id: string) => {
+	id = id.slice(1);
+	let data = await Cloudky.downloadFile(server, username, token, id);
+
+	const parts = id.split('/');
+	const fileName = parts[parts.length - 1];
+
+	let url = window.URL.createObjectURL(data);
+	let a = document.createElement('a');
+	a.href = url;
+	a.download = fileName;
+	document.body.appendChild(a);
+	a.click();
+	window.URL.revokeObjectURL(url);
+	document.body.removeChild(a);
+}
 
 (window as any).deleteFile = async (id: string) => {
 	// TODO: Show alert dialog and ask user again if he wants to delete this file
