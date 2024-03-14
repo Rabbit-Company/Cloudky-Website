@@ -27,11 +27,12 @@ const searchField = document.getElementById('search-field') as HTMLInputElement;
 
 initializeSession();
 
+localStorage.setItem('current-path', '/');
+
 const server = localStorage.getItem('server') || '';
 const username = localStorage.getItem('username') || '';
 const token = localStorage.getItem('token') || '';
 
-const currentPath = localStorage.getItem('current-path') || '/';
 let files = JSON.parse(localStorage.getItem('files') || '[]') as Array<CFile>;
 const email = localStorage.getItem('email');
 const storageUsed = localStorage.getItem('storage-used');
