@@ -36,6 +36,6 @@
     "@rabbit-company/logger": "^3.1.0",
     "@rabbit-company/password-entropy": "^2.0.1",
     "@rabbit-company/password-generator": "^2.0.1",
-    "tailwindcss": "^3.4.1"
+    "tailwindcss": "^3.4.3"
   }
 }
