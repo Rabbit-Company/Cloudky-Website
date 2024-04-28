@@ -4,7 +4,7 @@ import { getText } from "./lang";
 import { copyToClipboard, hide, hideDialogButtons, setText, showDialogButtons } from "./utils";
 
 export enum DialogType {
-	ERROR = 'Errror',
+	ERROR = 'Error',
 	SUCCESS = 'Success',
 	LOADING = 'Loading',
 	DEBUG = 'Debug'
