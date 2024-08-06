@@ -23,6 +23,10 @@ const iconList: { [key: string]: string } = {
 		'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 6l7 0" /><path d="M4 12l7 0" /><path d="M4 18l9 0" /><path d="M15 9l3 -3l3 3" /><path d="M18 6l0 12" />',
 	"sort-descending":
 		'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 6l9 0" /><path d="M4 12l7 0" /><path d="M4 18l7 0" /><path d="M15 15l3 3l3 -3" /><path d="M18 6l0 12" />',
+	"file-text":
+		'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" /><path d="M9 9l1 0" /><path d="M9 13l6 0" /><path d="M9 17l6 0" />',
+	"file-zip":
+		'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 20.735a2 2 0 0 1 -1 -1.735v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2h-1" /><path d="M11 17a2 2 0 0 1 2 2v2a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-2a2 2 0 0 1 2 -2z" /><path d="M11 5l-1 0" /><path d="M13 7l-1 0" /><path d="M11 9l-1 0" /><path d="M13 11l-1 0" /><path d="M11 13l-1 0" /><path d="M13 15l-1 0" />',
 };
 
 export function getIcon(id: string, color: string = "secondaryColor", size: number = 5): string {
@@ -36,4 +40,27 @@ export function setIcon(elementID: string, iconID: string, color: string = "seco
 		return;
 	}
 	element.innerHTML = getIcon(iconID, color, size);
+}
+
+export function getFileIcon(fileName: string, color?: string): string {
+	const extensions: { [key: string]: { icon: string; color: string } } = {
+		png: {
+			icon: "photo",
+			color: "text-red-600",
+		},
+		zip: {
+			icon: "file-zip",
+			color: "secondaryColor",
+		},
+	};
+
+	function getFileExtension(filename: string): string {
+		const parts = filename.split(".");
+		return parts.length > 1 ? parts[parts.length - 1] : "";
+	}
+
+	const extension = getFileExtension(fileName);
+	let id = extensions[extension]?.icon || "file-text";
+	if (!color) color = extensions[extension]?.color || "secondaryColor";
+	return getIcon(id, color, 5);
 }

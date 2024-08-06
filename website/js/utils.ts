@@ -2,7 +2,7 @@ import Argon2id from "@rabbit-company/argon2id";
 import Blake2b from "@rabbit-company/blake2b";
 import Logger from "@rabbit-company/logger";
 import Cloudky from "./api";
-import { getIcon } from "./icons";
+import { getFileIcon, getIcon } from "./icons";
 
 export function fhide(id: string): void {
 	let element = document.getElementById(id);
@@ -469,7 +469,7 @@ export function refreshFileManager(files: Record<string, any>, displayFiles: num
 			<tr>
 				<td class="secondaryColor whitespace-nowrap py-0 pl-4 pr-3 text-sm font-medium">
 					<div class="flex items-center space-x-2">
-						${getIcon("photo", "text-red-600")}
+						${getFileIcon(name)}
 						<span>${name}</span>
 					</div>
 				</td>
@@ -546,7 +546,7 @@ export function loadMoreFiles(files: Record<string, any>, amount = 20) {
 			<tr>
 				<td class="secondaryColor whitespace-nowrap py-0 pl-4 pr-3 text-sm font-medium">
 					<div class="flex items-center space-x-2">
-						${getIcon("photo", "text-red-600")}
+						${getFileIcon(name)}
 						<span>${name}</span>
 					</div>
 				</td>
