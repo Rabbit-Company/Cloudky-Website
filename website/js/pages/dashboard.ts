@@ -67,14 +67,7 @@ const created = localStorage.getItem("created");
 
 if (profileUsername) profileUsername.innerText = username || "";
 
-if (sidebarStorage) sidebarStorage.innerText = `${formatBytes(Number(storageUsed))} of ${formatBytes(Number(storageLimit))} used`;
-if (mobileSidebarStorage) mobileSidebarStorage.innerText = `${formatBytes(Number(storageUsed))} of ${formatBytes(Number(storageLimit))} used`;
-
-if (sidebarDownload) sidebarDownload.innerText = `${formatBytes(Number(downloadUsed))} of ${formatBytes(Number(downloadLimit))} used`;
-if (mobileSidebarDownload) mobileSidebarDownload.innerText = `${formatBytes(Number(downloadUsed))} of ${formatBytes(Number(downloadLimit))} used`;
-
-if (sidebarUpload) sidebarUpload.innerText = `${formatBytes(Number(uploadUsed))} of ${formatBytes(Number(uploadLimit))} used`;
-if (mobileSidebarUpload) mobileSidebarUpload.innerText = `${formatBytes(Number(uploadUsed))} of ${formatBytes(Number(uploadLimit))} used`;
+updateStats();
 
 const avatar = document.getElementById("avatar") as HTMLImageElement;
 avatar.src = `https://gravatar.com/avatar/${await hash(email || "")}`;

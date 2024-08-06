@@ -654,19 +654,43 @@ export function updateStats() {
 	const mobileSidebarDownload = document.getElementById("mobile-sidebar-download");
 	const mobileSidebarUpload = document.getElementById("mobile-sidebar-upload");
 
-	const storageUsed = localStorage.getItem("storage-used");
-	const storageLimit = localStorage.getItem("storage-limit");
-	const downloadUsed = localStorage.getItem("download-used");
-	const downloadLimit = localStorage.getItem("download-limit");
-	const uploadUsed = localStorage.getItem("upload-used");
-	const uploadLimit = localStorage.getItem("upload-limit");
+	const storageUsed = Number(localStorage.getItem("storage-used"));
+	const storageLimit = Number(localStorage.getItem("storage-limit"));
+	const downloadUsed = Number(localStorage.getItem("download-used"));
+	const downloadLimit = Number(localStorage.getItem("download-limit"));
+	const uploadUsed = Number(localStorage.getItem("upload-used"));
+	const uploadLimit = Number(localStorage.getItem("upload-limit"));
 
-	if (sidebarStorage) sidebarStorage.innerText = `${formatBytes(Number(storageUsed))} of ${formatBytes(Number(storageLimit))} used`;
-	if (mobileSidebarStorage) mobileSidebarStorage.innerText = `${formatBytes(Number(storageUsed))} of ${formatBytes(Number(storageLimit))} used`;
+	if (sidebarStorage) {
+		sidebarStorage.innerText = `${formatBytes(storageUsed)} of ${formatBytes(storageLimit)} used`;
+		if (storageUsed / storageLimit > 0.8) sidebarStorage.className = "warningColor";
+		if (storageUsed / storageLimit > 0.9) sidebarStorage.className = "dangerColor";
+	}
+	if (mobileSidebarStorage) {
+		mobileSidebarStorage.innerText = `${formatBytes(storageUsed)} of ${formatBytes(storageLimit)} used`;
+		if (storageUsed / storageLimit > 0.8) mobileSidebarStorage.className = "warningColor";
+		if (storageUsed / storageLimit > 0.9) mobileSidebarStorage.className = "dangerColor";
+	}
 
-	if (sidebarDownload) sidebarDownload.innerText = `${formatBytes(Number(downloadUsed))} of ${formatBytes(Number(downloadLimit))} used`;
-	if (mobileSidebarDownload) mobileSidebarDownload.innerText = `${formatBytes(Number(downloadUsed))} of ${formatBytes(Number(downloadLimit))} used`;
+	if (sidebarDownload) {
+		sidebarDownload.innerText = `${formatBytes(downloadUsed)} of ${formatBytes(downloadLimit)} used`;
+		if (downloadUsed / downloadLimit > 0.08) sidebarDownload.className = "warningColor";
+		if (downloadUsed / downloadLimit > 0.09) sidebarDownload.className = "dangerColor";
+	}
+	if (mobileSidebarDownload) {
+		mobileSidebarDownload.innerText = `${formatBytes(downloadUsed)} of ${formatBytes(downloadLimit)} used`;
+		if (downloadUsed / downloadLimit > 0.8) mobileSidebarDownload.className = "warningColor";
+		if (downloadUsed / downloadLimit > 0.9) mobileSidebarDownload.className = "dangerColor";
+	}
 
-	if (sidebarUpload) sidebarUpload.innerText = `${formatBytes(Number(uploadUsed))} of ${formatBytes(Number(uploadLimit))} used`;
-	if (mobileSidebarUpload) mobileSidebarUpload.innerText = `${formatBytes(Number(uploadUsed))} of ${formatBytes(Number(uploadLimit))} used`;
+	if (sidebarUpload) {
+		sidebarUpload.innerText = `${formatBytes(uploadUsed)} of ${formatBytes(uploadLimit)} used`;
+		if (uploadUsed / uploadLimit > 0.8) sidebarUpload.className = "warningColor";
+		if (uploadUsed / uploadLimit > 0.9) sidebarUpload.className = "dangerColor";
+	}
+	if (mobileSidebarUpload) {
+		mobileSidebarUpload.innerText = `${formatBytes(uploadUsed)} of ${formatBytes(uploadLimit)} used`;
+		if (uploadUsed / uploadLimit > 0.8) mobileSidebarUpload.className = "warningColor";
+		if (uploadUsed / uploadLimit > 0.9) mobileSidebarUpload.className = "dangerColor";
+	}
 }

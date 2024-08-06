@@ -20,6 +20,14 @@
 	color: #ffffff !important;
 }
 
+.warningColor {
+	color: #ffdb00 !important;
+}
+
+.dangerColor {
+	color: #ff0000 !important;
+}
+
 /*
 	Background colors
 */
