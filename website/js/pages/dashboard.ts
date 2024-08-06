@@ -19,6 +19,7 @@ import {
 	updateSortIcons,
 	loadMoreFiles,
 	deleteFiles,
+	updateStats,
 } from "../utils";
 
 const sidebar = document.getElementById("sidebar");
@@ -152,6 +153,9 @@ let sortedFiles = filesToNestedObject(files);
 	a.click();
 	window.URL.revokeObjectURL(url);
 	document.body.removeChild(a);
+
+	localStorage.setItem("download-used", (Number(localStorage.getItem("download-used")) + data.size).toString());
+	updateStats();
 };
 
 (window as any).deleteFile = async (id: string) => {

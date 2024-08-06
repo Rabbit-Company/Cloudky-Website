@@ -645,3 +645,28 @@ export function updateSortIcons() {
 		sortIcon.className = "ml-2 flex-none rounded bg-gray-700 text-gray-900";
 	});
 }
+
+export function updateStats() {
+	const sidebarStorage = document.getElementById("sidebar-storage");
+	const sidebarDownload = document.getElementById("sidebar-download");
+	const sidebarUpload = document.getElementById("sidebar-upload");
+	const mobileSidebarStorage = document.getElementById("mobile-sidebar-storage");
+	const mobileSidebarDownload = document.getElementById("mobile-sidebar-download");
+	const mobileSidebarUpload = document.getElementById("mobile-sidebar-upload");
+
+	const storageUsed = localStorage.getItem("storage-used");
+	const storageLimit = localStorage.getItem("storage-limit");
+	const downloadUsed = localStorage.getItem("download-used");
+	const downloadLimit = localStorage.getItem("download-limit");
+	const uploadUsed = localStorage.getItem("upload-used");
+	const uploadLimit = localStorage.getItem("upload-limit");
+
+	if (sidebarStorage) sidebarStorage.innerText = `${formatBytes(Number(storageUsed))} of ${formatBytes(Number(storageLimit))} used`;
+	if (mobileSidebarStorage) mobileSidebarStorage.innerText = `${formatBytes(Number(storageUsed))} of ${formatBytes(Number(storageLimit))} used`;
+
+	if (sidebarDownload) sidebarDownload.innerText = `${formatBytes(Number(downloadUsed))} of ${formatBytes(Number(downloadLimit))} used`;
+	if (mobileSidebarDownload) mobileSidebarDownload.innerText = `${formatBytes(Number(downloadUsed))} of ${formatBytes(Number(downloadLimit))} used`;
+
+	if (sidebarUpload) sidebarUpload.innerText = `${formatBytes(Number(uploadUsed))} of ${formatBytes(Number(uploadLimit))} used`;
+	if (mobileSidebarUpload) mobileSidebarUpload.innerText = `${formatBytes(Number(uploadUsed))} of ${formatBytes(Number(uploadLimit))} used`;
+}

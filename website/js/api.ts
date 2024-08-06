@@ -138,7 +138,7 @@ export default class Cloudky {
 		}
 	}
 
-	static async downloadFile(server: string, username: string, token: string, path: string): Promise<any> {
+	static async downloadFile(server: string, username: string, token: string, path: string): Promise<Blob> {
 		if (!Validate.url(server)) throw "url_invalid";
 		if (!Validate.username(username)) throw "12";
 		if (!Validate.token(token)) throw "25";
