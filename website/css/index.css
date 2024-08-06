@@ -1,11 +1,11 @@
-body{
+body {
 	min-width: 350px;
 	min-height: 350px;
 	overflow-x: hidden;
 }
 
 body * {
-	-webkit-tap-highlight-color: rgba(0,0,0,0);
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 ::-webkit-scrollbar {
@@ -13,12 +13,12 @@ body * {
 }
 
 input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button{
+input::-webkit-inner-spin-button {
 	-webkit-appearance: none;
 	margin: 0;
 }
 
-input[type=number]{
+input[type="number"] {
 	appearance: textfield;
 	-moz-appearance: textfield;
 }

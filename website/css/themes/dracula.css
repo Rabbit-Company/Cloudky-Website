@@ -116,7 +116,7 @@ input[type="checkbox"] {
 
 .mainMenuLink:hover {
 	color: #f8f8f2 !important;
-	border-color: #D1D5DB !important;
+	border-color: #d1d5db !important;
 }
 
 .mainMenuLinkSelected {
@@ -141,7 +141,7 @@ input[type="checkbox"] {
 }
 
 #main-menu-toggle-btn {
-	color: #9CA3AF !important;
+	color: #9ca3af !important;
 }
 
 #main-menu-toggle-btn:hover {

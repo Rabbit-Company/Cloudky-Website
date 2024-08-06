@@ -1,41 +1,42 @@
 {
-  "name": "cloudky-website",
-  "version": "1.0.0",
-  "description": "Self-hosted file sharing server",
-  "module": "website/index.ts",
-  "type": "module",
-  "scripts": {
-    "start": "bun run tools/build.ts && bun run tools/server.ts",
-    "build": "bun run tools/build.ts"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Rabbit-Company/Cloudky-Website.git"
-  },
-  "keywords": [
-    "cloudky",
-    "cloud",
-    "file",
-    "sharing"
-  ],
-  "author": "Rabbit Company",
-  "license": "GPL-3.0",
-  "bugs": {
-    "url": "https://github.com/Rabbit-Company/Cloudky-Website/issues"
-  },
-  "homepage": "https://github.com/Rabbit-Company/Cloudky-Website#readme",
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  },
-  "dependencies": {
-    "@rabbit-company/argon2id": "^2.0.0",
-    "@rabbit-company/blake2b": "^2.0.0",
-    "@rabbit-company/logger": "^3.1.0",
-    "@rabbit-company/password-entropy": "^2.0.1",
-    "@rabbit-company/password-generator": "^2.0.1",
-    "tailwindcss": "^3.4.3"
-  }
+	"name": "cloudky-website",
+	"version": "1.0.0",
+	"description": "Self-hosted file sharing server",
+	"module": "website/index.ts",
+	"type": "module",
+	"scripts": {
+		"start": "bun run tools/build.ts && bun run tools/server.ts",
+		"build": "npx tailwindcss -i ./tailwind.css -o ./website/css/tailwind.min.css --minify && bun run tools/build.ts"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Rabbit-Company/Cloudky-Website.git"
+	},
+	"keywords": [
+		"cloudky",
+		"cloud",
+		"file",
+		"sharing"
+	],
+	"author": "Rabbit Company",
+	"license": "GPL-3.0",
+	"bugs": {
+		"url": "https://github.com/Rabbit-Company/Cloudky-Website/issues"
+	},
+	"homepage": "https://github.com/Rabbit-Company/Cloudky-Website#readme",
+	"devDependencies": {
+		"@types/bun": "latest"
+	},
+	"peerDependencies": {
+		"typescript": "^5.0.0"
+	},
+	"dependencies": {
+		"@rabbit-company/argon2id": "^2.0.0",
+		"@rabbit-company/blake2b": "^2.0.0",
+		"@rabbit-company/logger": "^3.1.0",
+		"@rabbit-company/password-entropy": "^2.0.1",
+		"@rabbit-company/password-generator": "^2.0.1",
+		"caniuse-lite": "^1.0.30001649",
+		"tailwindcss": "^3.4.7"
+	}
 }

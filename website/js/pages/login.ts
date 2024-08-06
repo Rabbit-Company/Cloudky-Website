@@ -8,169 +8,169 @@ import Argon2id from "@rabbit-company/argon2id";
 import Logger from "@rabbit-company/logger";
 import Cloudky from "../api";
 
-if(isSessionValid()) window.location.href = 'dashboard.html';
+if (isSessionValid()) window.location.href = "dashboard.html";
 
-const serverInput = document.getElementById('server') as HTMLInputElement;
-const server2Input = document.getElementById('server2') as HTMLSelectElement;
-const usernameInput = document.getElementById('username') as HTMLInputElement;
-const passwordInput = document.getElementById('password') as HTMLInputElement;
+const serverInput = document.getElementById("server") as HTMLInputElement;
+const server2Input = document.getElementById("server2") as HTMLSelectElement;
+const usernameInput = document.getElementById("username") as HTMLInputElement;
+const passwordInput = document.getElementById("password") as HTMLInputElement;
 const otpInput = document.getElementById("otp") as HTMLInputElement;
 
-const logoElement = document.getElementById('logo');
-const signInBtnElement = document.getElementById('btn-signin');
-const signUpBtnElement = document.getElementById('btn-signup');
-const signInFormElement = document.getElementById('signin-form');
-const serverPickerElement = document.getElementById('server-picker');
-const forgotenUsernameElement = document.getElementById('forgot-username');
+const logoElement = document.getElementById("logo");
+const signInBtnElement = document.getElementById("btn-signin");
+const signUpBtnElement = document.getElementById("btn-signup");
+const signInFormElement = document.getElementById("signin-form");
+const serverPickerElement = document.getElementById("server-picker");
+const forgotenUsernameElement = document.getElementById("forgot-username");
 
-if(serverInput) serverInput.placeholder = await getText('server');
-if(usernameInput) usernameInput.placeholder = await getText('username');
-if(passwordInput) passwordInput.placeholder = await getText('password');
-if(signInBtnElement) signInBtnElement.innerText = await getText('signin');
-if(signUpBtnElement) signUpBtnElement.innerText = await getText('signup');
-if(forgotenUsernameElement) forgotenUsernameElement.innerText = await getText('forgot_username');
+if (serverInput) serverInput.placeholder = await getText("server");
+if (usernameInput) usernameInput.placeholder = await getText("username");
+if (passwordInput) passwordInput.placeholder = await getText("password");
+if (signInBtnElement) signInBtnElement.innerText = await getText("signin");
+if (signUpBtnElement) signUpBtnElement.innerText = await getText("signup");
+if (forgotenUsernameElement) forgotenUsernameElement.innerText = await getText("forgot_username");
 
-let server = localStorage.getItem('server');
-if(server !== null){
-	let servers = Array.from(server2Input.options).map(v => v.value);
-	if(servers.includes(server)){
+let server = localStorage.getItem("server");
+if (server !== null) {
+	let servers = Array.from(server2Input.options).map((v) => v.value);
+	if (servers.includes(server)) {
 		server2Input.value = server;
-	}else{
+	} else {
 		serverInput.value = server;
 		toggleServerPicker();
 	}
 }
 
-let username = localStorage.getItem('username');
-if(usernameInput && username !== null) usernameInput.value = username;
+let username = localStorage.getItem("username");
+if (usernameInput && username !== null) usernameInput.value = username;
 
-signUpBtnElement?.addEventListener('click', () => {
-	window.location.href = 'register.html';
+signUpBtnElement?.addEventListener("click", () => {
+	window.location.href = "register.html";
 });
 
-signInFormElement?.addEventListener('submit', e => {
+signInFormElement?.addEventListener("submit", (e) => {
 	e.preventDefault();
 	starLoginProcess();
 });
 
-serverPickerElement?.addEventListener('click', () => {
+serverPickerElement?.addEventListener("click", () => {
 	toggleServerPicker();
 });
 
 let debugMode = 0;
-logoElement?.addEventListener('click', async () => {
+logoElement?.addEventListener("click", async () => {
 	debugMode++;
-	if(debugMode < 5) return;
+	if (debugMode < 5) return;
 
 	debugMode = 0;
-	changeDialog(DialogType.LOADING, 'Testing features...');
-	show('dialog');
+	changeDialog(DialogType.LOADING, "Testing features...");
+	show("dialog");
 	let result = await getDebugInfo();
 	changeDialog(DialogType.DEBUG, result);
 });
 
-function toggleServerPicker(){
-	if(isfHidden('server')){
-		fhide('server2');
-		fshow('server');
-		setIcon('server-picker', 'adjustments-off', 'secondaryColor', 5);
-	}else{
-		fhide('server');
-		fshow('server2');
-		setIcon('server-picker', 'adjustments', 'secondaryColor', 5);
+function toggleServerPicker() {
+	if (isfHidden("server")) {
+		fhide("server2");
+		fshow("server");
+		setIcon("server-picker", "adjustments-off", "secondaryColor", 5);
+	} else {
+		fhide("server");
+		fshow("server2");
+		setIcon("server-picker", "adjustments", "secondaryColor", 5);
 	}
 }
 
-async function starLoginProcess(){
+async function starLoginProcess() {
 	let server = serverInput.value;
 	const username = usernameInput.value.toLowerCase();
 	const password = passwordInput.value;
 	const otp = otpInput.value;
 
-	if(isfHidden('server')){
+	if (isfHidden("server")) {
 		server = server2Input.value;
 	}
 
-	if(PasswordEntropy.calculate(password) < 75){
-		changeDialog(DialogType.ERROR, await getText('2'));
-		show('dialog');
+	if (PasswordEntropy.calculate(password) < 75) {
+		changeDialog(DialogType.ERROR, await getText("2"));
+		show("dialog");
 		return;
 	}
 
-	let debugMode = localStorage.getItem('debug-mode');
-	if(debugMode === 'true'){
-		changeDialog(DialogType.LOADING, 'Hashing your password...');
-	}else{
-		changeDialog(DialogType.LOADING, await getText('signing_in'));
+	let debugMode = localStorage.getItem("debug-mode");
+	if (debugMode === "true") {
+		changeDialog(DialogType.LOADING, "Hashing your password...");
+	} else {
+		changeDialog(DialogType.LOADING, await getText("signing_in"));
 	}
-	show('dialog');
+	show("dialog");
 
-	const authHash = Blake2b.hash(`cloudky2024-${password}-${username}`, '');
-	const authSalt = Blake2b.hash(`cloudky2024-${username}`, '');
-	try{
+	const authHash = Blake2b.hash(`cloudky2024-${password}-${username}`, "");
+	const authSalt = Blake2b.hash(`cloudky2024-${username}`, "");
+	try {
 		const authFinalHash = await Argon2id.hash(authHash, authSalt, 4, 16, 3, 64);
 		login(server, username, authFinalHash, password, otp);
-	}catch{
-		Logger.error('Argon2id hashing');
+	} catch {
+		Logger.error("Argon2id hashing");
 	}
 }
 
-async function login(server: string, username: string, authPass: string, password: string, otp: string){
-	try{
-		let debugMode = localStorage.getItem('debug-mode');
-		if(debugMode === 'true') changeDialog(DialogType.LOADING, 'Generating authentication token...');
+async function login(server: string, username: string, authPass: string, password: string, otp: string) {
+	try {
+		let debugMode = localStorage.getItem("debug-mode");
+		if (debugMode === "true") changeDialog(DialogType.LOADING, "Generating authentication token...");
 
 		let data = await Cloudky.getToken(server, username, authPass, otp);
 
-		if(typeof data.error === 'undefined'){
-			changeDialog(DialogType.ERROR, await getText('server_unreachable'));
+		if (typeof data.error === "undefined") {
+			changeDialog(DialogType.ERROR, await getText("server_unreachable"));
 			return;
 		}
 
-		if(data.error != 0){
+		if (data.error != 0) {
 			changeDialog(DialogType.ERROR, await getText(data.error));
 			return;
 		}
 
-		localStorage.setItem('server', server);
-		localStorage.setItem('username', username);
-		localStorage.setItem('token', data.token);
-		localStorage.setItem('logged', Date.now().toString());
+		localStorage.setItem("server", server);
+		localStorage.setItem("username", username);
+		localStorage.setItem("token", data.token);
+		localStorage.setItem("logged", Date.now().toString());
 
-		try{
-			if(debugMode === 'true') changeDialog(DialogType.LOADING, 'Loading files...');
+		try {
+			if (debugMode === "true") changeDialog(DialogType.LOADING, "Loading files...");
 			await getFileList(server, username, data.token);
-		}catch(err){
-			if(typeof err !== 'string') return;
+		} catch (err) {
+			if (typeof err !== "string") return;
 			changeDialog(DialogType.ERROR, await getText(err));
 			return;
 		}
 
-		try{
-			if(debugMode === 'true') changeDialog(DialogType.LOADING, 'Loading account data...');
+		try {
+			if (debugMode === "true") changeDialog(DialogType.LOADING, "Loading account data...");
 			await getAccountData(server, username, data.token);
-		}catch(err){
-			if(typeof err !== 'string') return;
+		} catch (err) {
+			if (typeof err !== "string") return;
 			changeDialog(DialogType.ERROR, await getText(err));
 			return;
 		}
 
-		if(localStorage.getItem('account-type') === '1'){
-			try{
-				if(debugMode === 'true') changeDialog(DialogType.LOADING, 'Generating hash for E2EE...');
-				const localHash = Blake2b.hash(`${username}-${password}-cloudky2024`, '');
-				const localSalt = Blake2b.hash(`${username}-cloudky2024`, '');
+		if (localStorage.getItem("account-type") === "1") {
+			try {
+				if (debugMode === "true") changeDialog(DialogType.LOADING, "Generating hash for E2EE...");
+				const localHash = Blake2b.hash(`${username}-${password}-cloudky2024`, "");
+				const localSalt = Blake2b.hash(`${username}-cloudky2024`, "");
 				const localFinalHash = await Argon2id.hash(localHash, localSalt, 4, 16, 3, 64);
-				localStorage.setItem('hash', localFinalHash);
-			}catch(err){
-				changeDialog(DialogType.ERROR, 'Generating encryption token has failed!');
+				localStorage.setItem("hash", localFinalHash);
+			} catch (err) {
+				changeDialog(DialogType.ERROR, "Generating encryption token has failed!");
 				return;
 			}
 		}
 
-		window.location.href = 'dashboard.html';
-	}catch(err){
-		if(typeof err !== 'string') return;
+		window.location.href = "dashboard.html";
+	} catch (err) {
+		if (typeof err !== "string") return;
 		changeDialog(DialogType.ERROR, await getText(err));
 	}
 }

@@ -9,15 +9,15 @@
 */
 
 .primaryColor {
-	color: #4F46E5 !important;
+	color: #4f46e5 !important;
 }
 
 .secondaryColor {
-	color: #6B7280 !important;
+	color: #6b7280 !important;
 }
 
 .tertiaryColor {
-	color: #DFE5EB !important;
+	color: #dfe5eb !important;
 }
 
 /*
@@ -25,19 +25,19 @@
 */
 
 .primaryBackgroundColor {
-	background-color: #0D1117 !important;
+	background-color: #0d1117 !important;
 }
 
 .secondaryBackgroundColor {
-	background-color: #161B22 !important;
+	background-color: #161b22 !important;
 }
 
 .tertiaryBackgroundColor {
-	background-color: #21262D !important;
+	background-color: #21262d !important;
 }
 
 .quaternaryBackgroundColor {
-	background-color: #4F46E5 !important;
+	background-color: #4f46e5 !important;
 }
 
 /*
@@ -45,17 +45,17 @@
 */
 
 .primaryButton {
-	background-color: #4F46E5 !important;
-	color: #DFE5EB !important;
+	background-color: #4f46e5 !important;
+	color: #dfe5eb !important;
 }
 
 .primaryButton:hover {
-	background-color: #4338CA !important;
+	background-color: #4338ca !important;
 }
 
 .successButton {
 	background-color: #059669 !important;
-	color: #DFE5EB !important;
+	color: #dfe5eb !important;
 }
 
 .successButton:hover {
@@ -63,18 +63,18 @@
 }
 
 .dangerButton {
-	background-color: #DC2626 !important;
-	color: #DFE5EB !important;
+	background-color: #dc2626 !important;
+	color: #dfe5eb !important;
 }
 
 .dangerButton:hover {
-	background-color: #B91C1C !important;
+	background-color: #b91c1c !important;
 }
 
 .cancelButton {
-	background-color: #21262D !important;
-	border-color: #161B22 !important;
-	color: #DFE5EB !important;
+	background-color: #21262d !important;
+	border-color: #161b22 !important;
+	color: #dfe5eb !important;
 }
 
 .cancelButton:hover {
@@ -86,19 +86,19 @@
 */
 
 input {
-	background-color: #21262D !important;
-	color: #DFE5EB !important;
+	background-color: #21262d !important;
+	color: #dfe5eb !important;
 	border-color: #16191d !important;
 }
 
 textarea {
-	background-color: #21262D !important;
-	color: #DFE5EB !important;
+	background-color: #21262d !important;
+	color: #dfe5eb !important;
 	border-color: #16191d !important;
 }
 
 input[type="checkbox"] {
-	accent-color: #4F46E5;
+	accent-color: #4f46e5;
 }
 
 /*
@@ -106,27 +106,27 @@ input[type="checkbox"] {
 */
 
 .mainMenuLink {
-	background-color: #161B22 !important;
-	color: #6B7280 !important;
+	background-color: #161b22 !important;
+	color: #6b7280 !important;
 }
 
 .mainMenuLink:hover {
-	color: #DFE5EB !important;
-	background-color: #21262D !important;
+	color: #dfe5eb !important;
+	background-color: #21262d !important;
 }
 
 .mainMenuLinkSelected {
-	color: #DFE5EB !important;
-	background-color: #21262D !important;
+	color: #dfe5eb !important;
+	background-color: #21262d !important;
 }
 
 #main-menu-toggle-btn {
-	color: #9CA3AF !important;
+	color: #9ca3af !important;
 }
 
 #main-menu-toggle-btn:hover {
-	color: #6B7280 !important;
-	background-color: #21262D !important;
+	color: #6b7280 !important;
+	background-color: #21262d !important;
 }
 
 /*
@@ -142,12 +142,12 @@ input[type="checkbox"] {
 */
 
 .primaryBorderColor::placeholder {
-	color: #6B7280;
+	color: #6b7280;
 	opacity: 1;
 }
 
 .primaryBorderColor::-ms-input-placeholder {
-	color: #6B7280;
+	color: #6b7280;
 	opacity: 1;
 }
 
@@ -156,7 +156,7 @@ input[type="checkbox"] {
 */
 
 .primaryStrokeColor {
-	stroke: #DFE5EB !important;
+	stroke: #dfe5eb !important;
 }
 
 /*
@@ -164,7 +164,7 @@ input[type="checkbox"] {
 */
 
 .passwordsBackgroundColor {
-	background-color: #0D1117 !important;
+	background-color: #0d1117 !important;
 }
 
 .passwordsBorderColor {
@@ -177,7 +177,7 @@ input[type="checkbox"] {
 
 .importExportButtons {
 	color: #b1bfce !important;
-	border-color: #0D1117 !important;
+	border-color: #0d1117 !important;
 }
 
 .importExportButtons:hover {
@@ -189,7 +189,7 @@ input[type="checkbox"] {
 */
 
 ::-webkit-scrollbar-track {
-	background: #161B22;
+	background: #161b22;
 }
 
 ::-webkit-scrollbar-thumb {
