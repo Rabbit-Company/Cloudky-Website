@@ -66,16 +66,14 @@ const created = localStorage.getItem("created");
 
 if (profileUsername) profileUsername.innerText = username || "";
 
-if (sidebarStorage) sidebarStorage.innerText = `${formatBytes(Number(storageUsed) * 1048576)} of ${formatBytes(Number(storageLimit) * 1048576)} used`;
-if (mobileSidebarStorage)
-	mobileSidebarStorage.innerText = `${formatBytes(Number(storageUsed) * 1048576)} of ${formatBytes(Number(storageLimit) * 1048576)} used`;
+if (sidebarStorage) sidebarStorage.innerText = `${formatBytes(Number(storageUsed))} of ${formatBytes(Number(storageLimit))} used`;
+if (mobileSidebarStorage) mobileSidebarStorage.innerText = `${formatBytes(Number(storageUsed))} of ${formatBytes(Number(storageLimit))} used`;
 
-if (sidebarDownload) sidebarDownload.innerText = `${formatBytes(Number(downloadUsed) * 1048576)} of ${formatBytes(Number(downloadLimit) * 1048576)} used`;
-if (mobileSidebarDownload)
-	mobileSidebarDownload.innerText = `${formatBytes(Number(downloadUsed) * 1048576)} of ${formatBytes(Number(downloadLimit) * 1048576)} used`;
+if (sidebarDownload) sidebarDownload.innerText = `${formatBytes(Number(downloadUsed))} of ${formatBytes(Number(downloadLimit))} used`;
+if (mobileSidebarDownload) mobileSidebarDownload.innerText = `${formatBytes(Number(downloadUsed))} of ${formatBytes(Number(downloadLimit))} used`;
 
-if (sidebarUpload) sidebarUpload.innerText = `${formatBytes(Number(uploadUsed) * 1048576)} of ${formatBytes(Number(uploadLimit) * 1048576)} used`;
-if (mobileSidebarUpload) mobileSidebarUpload.innerText = `${formatBytes(Number(uploadUsed) * 1048576)} of ${formatBytes(Number(uploadLimit) * 1048576)} used`;
+if (sidebarUpload) sidebarUpload.innerText = `${formatBytes(Number(uploadUsed))} of ${formatBytes(Number(uploadLimit))} used`;
+if (mobileSidebarUpload) mobileSidebarUpload.innerText = `${formatBytes(Number(uploadUsed))} of ${formatBytes(Number(uploadLimit))} used`;
 
 const avatar = document.getElementById("avatar") as HTMLImageElement;
 avatar.src = `https://gravatar.com/avatar/${await hash(email || "")}`;
