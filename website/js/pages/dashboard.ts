@@ -82,6 +82,8 @@ let sortedFiles = filesToNestedObject(files);
 	let currentPath = localStorage.getItem("current-path") || "/";
 	if (currentPath === path) return;
 
+	openedFileDropDowns.clear();
+
 	const searchedFiles = localStorage.getItem("searched-files");
 	if (searchedFiles !== null) {
 		let filteredSortedFiles: Record<string, any> = JSON.parse(searchedFiles);
