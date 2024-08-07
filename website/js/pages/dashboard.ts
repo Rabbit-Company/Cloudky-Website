@@ -47,6 +47,8 @@ const searchField = document.getElementById("search-field") as HTMLInputElement;
 
 initializeSession();
 
+let openedFileDropDowns: Set<string> = new Set();
+
 localStorage.setItem("current-path", "/");
 
 const server = localStorage.getItem("server") || "";
@@ -125,8 +127,12 @@ let sortedFiles = filesToNestedObject(files);
 	if (!menu) return;
 
 	if (isfHidden(id)) {
+		openedFileDropDowns.forEach((id) => fhide(id));
+		openedFileDropDowns.clear();
+		openedFileDropDowns.add(id);
 		fshow(id);
 	} else {
+		openedFileDropDowns.delete(id);
 		fhide(id);
 	}
 };
@@ -249,4 +255,14 @@ profileDropdownButton?.addEventListener("click", () => {
 signoutButton?.addEventListener("click", () => {
 	clearStorage();
 	window.location.href = "index.html";
+});
+
+document.addEventListener("click", (event: MouseEvent) => {
+	const target = event.target as HTMLElement;
+
+	const dropdownElement = target.closest(".fileDropDown") as HTMLElement | null;
+
+	if (dropdownElement) return;
+	openedFileDropDowns.forEach((id) => fhide(id));
+	openedFileDropDowns.clear();
 });

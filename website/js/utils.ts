@@ -445,7 +445,7 @@ export function refreshFileManager(files: Record<string, any>, displayFiles: num
 				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatBytes(folder.Size)}</td>
 				<td class="relative whitespace-nowrap py-0 pl-3 pr-4 text-right text-sm sm:pr-0">
 					<button onclick="dropdownClick('folder-${i + 1}')" class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
-						${getIcon("dots-vertical")}
+						${getIcon("dots-vertical", "secondaryColor fileDropDown")}
 					</button>
 					<div id="folder-${i + 1}" class="hidden z-10 absolute right-0 mt-2 w-24 secondaryBackgroundColor rounded-lg shadow-lg" style="display: none">
 						<ul class="py-1">
@@ -477,7 +477,7 @@ export function refreshFileManager(files: Record<string, any>, displayFiles: num
 				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatBytes(files[name].Size)}</td>
 				<td class="relative whitespace-nowrap py-0 pl-3 pr-4 text-right text-sm sm:pr-0">
 					<button onclick="dropdownClick('file-${i + 1}')" class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
-						${getIcon("dots-vertical")}
+						${getIcon("dots-vertical", "secondaryColor fileDropDown")}
 					</button>
 					<div id="file-${i + 1}" class="hidden z-10 absolute right-0 mt-2 w-24 secondaryBackgroundColor rounded-lg shadow-lg" style="display: none">
 						<ul class="py-1">
@@ -524,7 +524,7 @@ export function loadMoreFiles(files: Record<string, any>, amount = 20) {
 				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatBytes(folder.Size)}</td>
 				<td class="relative whitespace-nowrap py-0 pl-3 pr-4 text-right text-sm sm:pr-0">
 					<button onclick="dropdownClick('folder-${i + 1}')" class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
-						${getIcon("dots-vertical")}
+						${getIcon("dots-vertical", "secondaryColor fileDropDown")}
 					</button>
 					<div id="file-${i + 1}" class="hidden z-10 absolute right-0 mt-2 w-24 secondaryBackgroundColor rounded-lg shadow-lg" syle="display: none">
 						<ul class="py-1">
@@ -554,7 +554,7 @@ export function loadMoreFiles(files: Record<string, any>, amount = 20) {
 				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatBytes(files[name].Size)}</td>
 				<td class="relative whitespace-nowrap py-0 pl-3 pr-4 text-right text-sm sm:pr-0">
 					<button onclick="dropdownClick('file-${i + 1}')" class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
-						${getIcon("dots-vertical")}
+						${getIcon("dots-vertical", "secondaryColor fileDropDown")}
 					</button>
 					<div id="file-${i + 1}" class="hidden z-10 absolute right-0 mt-2 w-24 secondaryBackgroundColor rounded-lg shadow-lg" style="display: none">
 						<ul class="py-1">
