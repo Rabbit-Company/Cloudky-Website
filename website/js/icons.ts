@@ -1,4 +1,5 @@
 import Logger from "@rabbit-company/logger";
+import { extensions } from "./extensions";
 
 const iconList: { [key: string]: string } = {
 	adjustments:
@@ -27,6 +28,10 @@ const iconList: { [key: string]: string } = {
 		'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" /><path d="M9 9l1 0" /><path d="M9 13l6 0" /><path d="M9 17l6 0" />',
 	"file-zip":
 		'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 20.735a2 2 0 0 1 -1 -1.735v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2h-1" /><path d="M11 17a2 2 0 0 1 2 2v2a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-2a2 2 0 0 1 2 -2z" /><path d="M11 5l-1 0" /><path d="M13 7l-1 0" /><path d="M11 9l-1 0" /><path d="M13 11l-1 0" /><path d="M11 13l-1 0" /><path d="M13 15l-1 0" />',
+	"file-music":
+		'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" /><path d="M11 16m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 16l0 -5l2 1" />',
+	"file-database":
+		'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12.75m-4 0a4 1.75 0 1 0 8 0a4 1.75 0 1 0 -8 0" /><path d="M8 12.5v3.75c0 .966 1.79 1.75 4 1.75s4 -.784 4 -1.75v-3.75" /><path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />',
 };
 
 export function getIcon(id: string, color: string = "secondaryColor", size: number = 5): string {
@@ -42,25 +47,16 @@ export function setIcon(elementID: string, iconID: string, color: string = "seco
 	element.innerHTML = getIcon(iconID, color, size);
 }
 
-export function getFileIcon(fileName: string, color?: string): string {
-	const extensions: { [key: string]: { icon: string; color: string } } = {
-		png: {
-			icon: "photo",
-			color: "text-red-600",
-		},
-		zip: {
-			icon: "file-zip",
-			color: "secondaryColor",
-		},
-	};
-
+export function getFileIcon(fileName: string): string {
 	function getFileExtension(filename: string): string {
 		const parts = filename.split(".");
 		return parts.length > 1 ? parts[parts.length - 1] : "";
 	}
 
 	const extension = getFileExtension(fileName);
-	let id = extensions[extension]?.icon || "file-text";
-	if (!color) color = extensions[extension]?.color || "secondaryColor";
-	return getIcon(id, color, 5);
+
+	const ext = extensions[extension];
+	if (!ext) return getIcon("file-text", "secondaryColor");
+
+	return getIcon(ext.icon, ext.color);
 }
