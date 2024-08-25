@@ -25,18 +25,17 @@
 	},
 	"homepage": "https://github.com/Rabbit-Company/Cloudky-Website#readme",
 	"devDependencies": {
-		"@types/bun": "latest"
+		"@types/bun": "^1.1.8"
 	},
 	"peerDependencies": {
-		"typescript": "^5.0.0"
+		"typescript": "^5.5.4"
 	},
 	"dependencies": {
 		"@rabbit-company/argon2id": "^2.0.0",
-		"@rabbit-company/blake2b": "^2.0.0",
-		"@rabbit-company/logger": "^3.1.0",
-		"@rabbit-company/password-entropy": "^2.0.1",
-		"@rabbit-company/password-generator": "^2.0.1",
-		"caniuse-lite": "^1.0.30001649",
-		"tailwindcss": "^3.4.7"
+		"@rabbit-company/blake2b": "^2.1.0",
+		"@rabbit-company/logger": "^4.0.0",
+		"@rabbit-company/password-entropy": "^2.1.0",
+		"@rabbit-company/password-generator": "^2.1.0",
+		"tailwindcss": "^3.4.10"
 	}
 }
