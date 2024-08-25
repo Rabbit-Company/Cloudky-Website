@@ -204,10 +204,6 @@ export const extensions: Extensions = {
 		icon: "file-music",
 		color: "orange",
 	},
-	mp3: {
-		icon: "file-music",
-		color: "orange",
-	},
 	aiff: {
 		icon: "file-music",
 		color: "orange",
@@ -217,7 +213,7 @@ export const extensions: Extensions = {
 		icon: "file-zip",
 		color: "purple",
 	},
-	7z: {
+	"7z": {
 		icon: "file-zip",
 		color: "purple",
 	},
@@ -241,11 +237,11 @@ export const extensions: Extensions = {
 		icon: "file-zip",
 		color: "purple",
 	},
-	tar.gz: {
+	"tar.gz": {
 		icon: "file-zip",
 		color: "purple",
 	},
-	tar.xz: {
+	"tar.xz": {
 		icon: "file-zip",
 		color: "purple",
 	},
@@ -424,7 +420,7 @@ export const extensions: Extensions = {
 		icon: "file-3d",
 		color: "orange",
 	},
-	3ds: {
+	"3ds": {
 		icon: "file-3d",
 		color: "orange",
 	},
