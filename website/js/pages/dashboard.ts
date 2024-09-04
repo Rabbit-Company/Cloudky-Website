@@ -50,6 +50,8 @@ const server = localStorage.getItem("server") || "";
 const username = localStorage.getItem("username") || "";
 const token = localStorage.getItem("token") || "";
 
+const cloudky = new CloudkyAPI(server, username, token);
+
 let files = JSON.parse(localStorage.getItem("files") || "[]") as Array<FileInformation>;
 const email = localStorage.getItem("email");
 const storageUsed = localStorage.getItem("storage-used");
@@ -136,7 +138,7 @@ let sortedFiles = filesToNestedObject(files);
 
 (window as any).downloadFile = async (id: string) => {
 	id = id.slice(1);
-	let data = await CloudkyAPI.downloadFile(server, username, token, id);
+	let data = await cloudky.downloadFile(id);
 	if (!(data instanceof Blob)) return;
 
 	const parts = id.split("/");
