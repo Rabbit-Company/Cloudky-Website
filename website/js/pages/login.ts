@@ -1,12 +1,8 @@
-import PasswordEntropy from "@rabbit-company/password-entropy";
+import { Argon2id, Blake2b, CloudkyAPI, Error, PasswordEntropy, type AccountTokenResponse } from "@rabbit-company/cloudky-api";
 import { DialogType, changeDialog } from "../dialog";
 import { setIcon } from "../icons";
 import { getText } from "../lang";
 import { fhide, fshow, getAccountData, getDebugInfo, getFileList, isSessionValid, isfHidden, show } from "../utils";
-import Blake2b from "@rabbit-company/blake2b";
-import Argon2id from "@rabbit-company/argon2id";
-import Logger from "@rabbit-company/logger";
-import Cloudky from "../api";
 
 if (isSessionValid()) window.location.href = "dashboard.html";
 
@@ -50,7 +46,7 @@ signUpBtnElement?.addEventListener("click", () => {
 
 signInFormElement?.addEventListener("submit", (e) => {
 	e.preventDefault();
-	starLoginProcess();
+	startLoginProcess();
 });
 
 serverPickerElement?.addEventListener("click", () => {
@@ -81,7 +77,7 @@ function toggleServerPicker() {
 	}
 }
 
-async function starLoginProcess() {
+async function startLoginProcess() {
 	let server = serverInput.value;
 	const username = usernameInput.value.toLowerCase();
 	const password = passwordInput.value;
@@ -97,37 +93,20 @@ async function starLoginProcess() {
 		return;
 	}
 
-	let debugMode = localStorage.getItem("debug-mode");
-	if (debugMode === "true") {
-		changeDialog(DialogType.LOADING, "Hashing your password...");
-	} else {
-		changeDialog(DialogType.LOADING, await getText("signing_in"));
-	}
+	changeDialog(DialogType.LOADING, await getText("signing_in"));
 	show("dialog");
 
-	const authHash = Blake2b.hash(`cloudky2024-${password}-${username}`, "");
-	const authSalt = Blake2b.hash(`cloudky2024-${username}`, "");
-	try {
-		const authFinalHash = await Argon2id.hash(authHash, authSalt, 4, 16, 3, 64);
-		login(server, username, authFinalHash, password, otp);
-	} catch {
-		Logger.error("Argon2id hashing");
-	}
+	login(server, username, password, otp);
 }
 
-async function login(server: string, username: string, authPass: string, password: string, otp: string) {
+async function login(server: string, username: string, password: string, otp: string) {
 	try {
 		let debugMode = localStorage.getItem("debug-mode");
 		if (debugMode === "true") changeDialog(DialogType.LOADING, "Generating authentication token...");
 
-		let data = await Cloudky.getToken(server, username, authPass, otp);
+		const data: AccountTokenResponse = await CloudkyAPI.getToken(server, username, password, otp);
 
-		if (typeof data.error === "undefined") {
-			changeDialog(DialogType.ERROR, await getText("server_unreachable"));
-			return;
-		}
-
-		if (data.error != 0) {
+		if (!data.token) {
 			changeDialog(DialogType.ERROR, await getText(data.error));
 			return;
 		}
@@ -153,19 +132,6 @@ async function login(server: string, username: string, authPass: string, passwor
 			if (typeof err !== "string") return;
 			changeDialog(DialogType.ERROR, await getText(err));
 			return;
-		}
-
-		if (localStorage.getItem("account-type") === "1") {
-			try {
-				if (debugMode === "true") changeDialog(DialogType.LOADING, "Generating hash for E2EE...");
-				const localHash = Blake2b.hash(`${username}-${password}-cloudky2024`, "");
-				const localSalt = Blake2b.hash(`${username}-cloudky2024`, "");
-				const localFinalHash = await Argon2id.hash(localHash, localSalt, 4, 16, 3, 64);
-				localStorage.setItem("hash", localFinalHash);
-			} catch (err) {
-				changeDialog(DialogType.ERROR, "Generating encryption token has failed!");
-				return;
-			}
 		}
 
 		window.location.href = "dashboard.html";

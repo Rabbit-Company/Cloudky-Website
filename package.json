@@ -31,10 +31,8 @@
 		"typescript": "^5.5.4"
 	},
 	"dependencies": {
-		"@rabbit-company/argon2id": "npm:@jsr/rabbit-company__argon2id@2.0.1",
-		"@rabbit-company/blake2b": "npm:@jsr/rabbit-company__blake2b@2.1.1",
+		"@rabbit-company/cloudky-api": "npm:@jsr/rabbit-company__cloudky-api@0.0.2",
 		"@rabbit-company/logger": "npm:@jsr/rabbit-company__logger@4.0.1",
-		"@rabbit-company/password-entropy": "npm:@jsr/rabbit-company__password-entropy@2.1.1",
 		"@rabbit-company/password-generator": "npm:@jsr/rabbit-company__password-generator@2.1.1",
 		"tailwindcss": "^3.4.10"
 	}

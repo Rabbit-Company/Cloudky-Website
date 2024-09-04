@@ -1,8 +1,6 @@
-import Argon2id from "@rabbit-company/argon2id";
-import Blake2b from "@rabbit-company/blake2b";
 import Logger from "@rabbit-company/logger";
-import Cloudky from "./api";
 import { getFileIcon, getIcon } from "./icons";
+import { Argon2id, Blake2b, CloudkyAPI, Error, type AccountDataResponse, type FileInformation, type FileListResponse } from "@rabbit-company/cloudky-api";
 
 export function fhide(id: string): void {
 	let element = document.getElementById(id);
@@ -176,7 +174,7 @@ export async function getDebugInfo(): Promise<string> {
 	if (blake2bHash.startsWith("a71079d428") && blake2bHash.endsWith("6a89bea572")) blake2b = true;
 
 	return `
-	Client Version: 1.0.0
+	Client Version: 0.0.1
 
 	Server: ${localStorage.getItem("server")}
 	Username: ${localStorage.getItem("username")}
@@ -267,47 +265,32 @@ export function initializeSession() {
 }
 
 export async function getAccountData(server: string, username: string, token: string): Promise<boolean> {
-	try {
-		let data = await Cloudky.getAccountData(server, username, token);
-		if (data.error !== 0) return false;
-		localStorage.setItem("email", data.data.Email);
-		localStorage.setItem("download-used", data.data.DownloadUsed);
-		localStorage.setItem("download-limit", data.data.DownloadLimit);
-		localStorage.setItem("upload-used", data.data.UploadUsed);
-		localStorage.setItem("upload-limit", data.data.UploadLimit);
-		localStorage.setItem("storage-used", data.data.StorageUsed);
-		localStorage.setItem("storage-limit", data.data.StorageLimit);
-		localStorage.setItem("storage-type", data.data.StorageType);
-		localStorage.setItem("account-type", data.data.AccountType);
-		localStorage.setItem("created", data.data.Created);
-		return true;
-	} catch {}
-	return false;
+	const data: AccountDataResponse = await CloudkyAPI.getAccountData(server, username, token);
+	if (!data.data) return false;
+	localStorage.setItem("email", data.data.Email);
+	localStorage.setItem("download-used", data.data.DownloadUsed.toString());
+	localStorage.setItem("download-limit", data.data.DownloadLimit.toString());
+	localStorage.setItem("upload-used", data.data.UploadUsed.toString());
+	localStorage.setItem("upload-limit", data.data.UploadLimit.toString());
+	localStorage.setItem("storage-used", data.data.StorageUsed.toString());
+	localStorage.setItem("storage-limit", data.data.StorageLimit.toString());
+	localStorage.setItem("storage-type", data.data.StorageType);
+	localStorage.setItem("account-type", data.data.AccountType.toString());
+	localStorage.setItem("created", data.data.Created.toString());
+	return true;
 }
 
 export async function getFileList(server: string, username: string, token: string): Promise<boolean> {
-	try {
-		let data = await Cloudky.getFileList(server, username, token);
-		if (data.error !== 0) return false;
-		localStorage.setItem("files", JSON.stringify(data.data));
-		return true;
-	} catch {}
-	return false;
+	let data: FileListResponse = await CloudkyAPI.listFiles(server, username, token);
+	if (!data.data) return false;
+	localStorage.setItem("files", JSON.stringify(data.data));
+	return true;
 }
 
 export async function deleteFiles(server: string, username: string, token: string, paths: string[]): Promise<boolean> {
-	try {
-		let data = await Cloudky.deleteFiles(server, username, token, paths);
-		if (data.error !== 0) return false;
-		return true;
-	} catch {}
-	return false;
-}
-
-export interface CFile {
-	Key: string;
-	Modified: number;
-	Size: number;
+	let data = await CloudkyAPI.deleteFiles(server, username, token, paths);
+	if (data.error !== Error.SUCCESS) return false;
+	return true;
 }
 
 export enum SORT {
@@ -319,7 +302,7 @@ export enum SORT {
 	SIZE_DESC = "size-desc",
 }
 
-export function filesToNestedObject(files: CFile[]): Record<string, any> {
+export function filesToNestedObject(files: FileInformation[]): Record<string, any> {
 	const result: Record<string, any> = {};
 
 	files.forEach((file) => {

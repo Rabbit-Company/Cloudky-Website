@@ -1,12 +1,8 @@
-import PasswordEntropy from "@rabbit-company/password-entropy";
 import { fhide, fshow, isSessionValid, isfHidden, show, showDialogButtons } from "../utils";
 import { setIcon } from "../icons";
 import { getText } from "../lang";
-import Cloudky from "../api";
 import { DialogType, changeDialog } from "../dialog";
-import Blake2b from "@rabbit-company/blake2b";
-import Argon2id from "@rabbit-company/argon2id";
-import Logger from "@rabbit-company/logger";
+import { CloudkyAPI, Error, PasswordEntropy } from "@rabbit-company/cloudky-api";
 
 if (isSessionValid()) window.location.href = "dashboard.html";
 
@@ -106,28 +102,16 @@ async function starRegistrationProcess() {
 	changeDialog(DialogType.LOADING, await getText("signing_up"));
 	show("dialog");
 
-	const authHash = Blake2b.hash(`cloudky2024-${password}-${username}`, "");
-	const authSalt = Blake2b.hash(`cloudky2024-${username}`, "");
-	try {
-		const authFinalHash = await Argon2id.hash(authHash, authSalt, 4, 16, 3, 64);
-		register(server, username, email, authFinalHash, 0);
-	} catch {
-		Logger.error("Argon2id hashing");
-	}
+	register(server, username, email, password, 0);
 }
 
-async function register(server: string, username: string, email: string, authPass: string, type: number) {
+async function register(server: string, username: string, email: string, password: string, type: number) {
 	try {
-		let data = await Cloudky.createAccount(server, username, email, authPass, type);
+		const data = await CloudkyAPI.createAccount(server, username, email, password, type);
 
 		showDialogButtons();
 
-		if (typeof data.error === "undefined") {
-			changeDialog(DialogType.ERROR, await getText("server_unreachable"));
-			return;
-		}
-
-		if (data.error != 0) {
+		if (data.error !== Error.SUCCESS) {
 			changeDialog(DialogType.ERROR, await getText(data.error));
 			return;
 		}

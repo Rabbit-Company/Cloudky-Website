@@ -1,18 +1,13 @@
-import Cloudky from "../api";
+import { CloudkyAPI, type FileInformation } from "@rabbit-company/cloudky-api";
 import { getIcon } from "../icons";
 import {
 	clearStorage,
 	fhide,
-	formatBytes,
 	fshow,
 	hash,
 	initializeSession,
-	isSessionValid,
 	isfHidden,
-	type CFile,
-	formatLastModified,
 	filesToNestedObject,
-	getFolderMetadata,
 	refreshFileManager,
 	refreshBreadcrumb,
 	getDisplayedFiles,
@@ -55,7 +50,7 @@ const server = localStorage.getItem("server") || "";
 const username = localStorage.getItem("username") || "";
 const token = localStorage.getItem("token") || "";
 
-let files = JSON.parse(localStorage.getItem("files") || "[]") as Array<CFile>;
+let files = JSON.parse(localStorage.getItem("files") || "[]") as Array<FileInformation>;
 const email = localStorage.getItem("email");
 const storageUsed = localStorage.getItem("storage-used");
 const storageLimit = localStorage.getItem("storage-limit");
@@ -141,7 +136,8 @@ let sortedFiles = filesToNestedObject(files);
 
 (window as any).downloadFile = async (id: string) => {
 	id = id.slice(1);
-	let data = await Cloudky.downloadFile(server, username, token, id);
+	let data = await CloudkyAPI.downloadFile(server, username, token, id);
+	if (!(data instanceof Blob)) return;
 
 	const parts = id.split("/");
 	const fileName = parts[parts.length - 1];

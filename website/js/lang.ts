@@ -1,3 +1,4 @@
+import type { Error } from "@rabbit-company/cloudky-api";
 import Logger from "@rabbit-company/logger";
 
 const languageList: string[] = [
@@ -77,11 +78,11 @@ export async function loadTranslations(lang: string): Promise<void> {
 	}
 }
 
-export async function getText(key: string): Promise<string> {
+export async function getText(key: string | Error): Promise<string> {
 	const selectedLang = getLang();
 
 	await loadTranslations(selectedLang);
-	const translation = translationsCache[selectedLang]?.[key] || key;
+	const translation = translationsCache[selectedLang]?.[key.toString()] || key.toString();
 
 	return translation;
 }
