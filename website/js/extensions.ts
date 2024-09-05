@@ -10,7 +10,7 @@ interface Extensions {
 export const extensions: Extensions = {
 	// Images
 	png: {
-		icon: "file-type-png",
+		icon: "photo",
 		color: "lightBlue",
 	},
 	svg: {
@@ -22,19 +22,19 @@ export const extensions: Extensions = {
 		color: "yellow",
 	},
 	jpg: {
-		icon: "file-type-jpg",
+		icon: "photo",
 		color: "lightRed",
 	},
 	jpeg: {
-		icon: "file-type-jpg",
+		icon: "photo",
 		color: "lightRed",
 	},
 	heic: {
-		icon: "file-type-jpg",
+		icon: "photo",
 		color: "lightRed",
 	},
 	heif: {
-		icon: "file-type-jpg",
+		icon: "photo",
 		color: "lightRed",
 	},
 	bmp: {

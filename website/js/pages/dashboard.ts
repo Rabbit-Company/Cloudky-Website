@@ -1,4 +1,4 @@
-import { CloudkyAPI, type FileInformation } from "@rabbit-company/cloudky-api";
+import { CloudkyAPI, Error, type FileInformation } from "@rabbit-company/cloudky-api";
 import { getIcon } from "../icons";
 import {
 	clearStorage,
@@ -160,8 +160,8 @@ let sortedFiles = filesToNestedObject(files);
 (window as any).deleteFile = async (id: string) => {
 	// TODO: Show alert dialog and ask user again if he wants to delete this file
 	id = id.slice(1);
-	let deleted = await deleteFiles(server, username, token, [id]);
-	if (!deleted) return;
+	const res = await cloudky.deleteFiles([id]);
+	if (res.error !== Error.SUCCESS) return;
 
 	const index = files.findIndex((file) => file.Key === id);
 	if (index !== -1) files.splice(index, 1);
