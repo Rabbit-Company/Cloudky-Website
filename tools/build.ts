@@ -6,7 +6,7 @@ import fs from "node:fs/promises";
 Logger.info("Build started");
 
 Logger.info("Start bulding TailwindCSS...");
-await $`bunx tailwindcss -i ./tailwind.css -o ./website/css/tailwind.min.css --minify`.quiet();
+await $`npx @tailwindcss/cli -i ./tailwind.css -o ./website/css/tailwind.min.css --minify`.quiet();
 Logger.info("Bulding TailwindCSS complete");
 
 await fs.rm("./dist", { recursive: true });

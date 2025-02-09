@@ -32,11 +32,11 @@
 				</div>
 				<form id="signin-form" class="mt-8 space-y-6">
 					<input type="hidden" name="remember" value="true" />
-					<div class="rounded-md shadow-sm -space-y-px">
+					<div class="rounded-md shadow-xs -space-y-px">
 						<div>
 							<label for="server" class="sr-only">Server</label>
-							<div class="flex rounded-md shadow-sm">
-								<div class="relative flex flex-grow items-stretch focus-within:z-10">
+							<div class="flex rounded-md shadow-xs">
+								<div class="relative flex grow items-stretch focus-within:z-10">
 									<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
 										<svg
 											xmlns="http://www.w3.org/2000/svg"
@@ -61,7 +61,7 @@
 									</div>
 									<select
 										id="server2"
-										class="tertiaryBackgroundColor tertiaryColor primaryBorderColor appearance-none block w-full pl-10 px-3 py-2 border rounded-tl-md focus:outline-none sm:text-sm"
+										class="tertiaryBackgroundColor tertiaryColor primaryBorderColor appearance-none block w-full pl-10 px-3 py-2 border rounded-tl-md focus:outline-hidden sm:text-sm"
 									>
 										<option value="https://eu.cloudky.org" selected>Europe</option>
 										<option value="https://us.cloudky.org">America</option>
@@ -72,14 +72,14 @@
 										type="text"
 										autocomplete="server"
 										style="display: none"
-										class="tertiaryBackgroundColor tertiaryColor primaryBorderColor appearance-none block w-full pl-10 px-3 py-2 border rounded-tl-md focus:outline-none sm:text-sm"
+										class="tertiaryBackgroundColor tertiaryColor primaryBorderColor appearance-none block w-full pl-10 px-3 py-2 border rounded-tl-md focus:outline-hidden sm:text-sm"
 										placeholder="Server"
 									/>
 								</div>
 								<button
 									id="server-picker"
 									type="button"
-									class="relative -ml-px inline-flex items-center space-x-2 border rounded-tr-md tertiaryBackgroundColor tertiaryColor primaryBorderColor px-4 py-2 text-sm font-medium focus:outline-none"
+									class="relative -ml-px inline-flex items-center space-x-2 border rounded-tr-md tertiaryBackgroundColor tertiaryColor primaryBorderColor px-4 py-2 text-sm font-medium focus:outline-hidden"
 								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
@@ -109,7 +109,7 @@
 						</div>
 						<div>
 							<label for="username" class="sr-only">Username</label>
-							<div class="relative rounded-md shadow-sm">
+							<div class="relative rounded-md shadow-xs">
 								<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
@@ -134,14 +134,14 @@
 									type="text"
 									autocomplete="username"
 									required
-									class="tertiaryBackgroundColor tertiaryColor primaryBorderColor appearance-none rounded-none block w-full pl-10 px-3 py-2 border focus:outline-none focus:z-10 sm:text-sm"
+									class="tertiaryBackgroundColor tertiaryColor primaryBorderColor appearance-none rounded-none block w-full pl-10 px-3 py-2 border focus:outline-hidden focus:z-10 sm:text-sm"
 									placeholder="Username"
 								/>
 							</div>
 						</div>
 						<div>
 							<label for="password" class="sr-only">Password</label>
-							<div class="relative rounded-md shadow-sm">
+							<div class="relative rounded-md shadow-xs">
 								<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
@@ -168,14 +168,14 @@
 									type="password"
 									autocomplete="off"
 									required
-									class="tertiaryBackgroundColor tertiaryColor primaryBorderColor appearance-none rounded-none block w-full pl-10 px-3 py-2 border focus:outline-none focus:z-10 sm:text-sm"
+									class="tertiaryBackgroundColor tertiaryColor primaryBorderColor appearance-none rounded-none block w-full pl-10 px-3 py-2 border focus:outline-hidden focus:z-10 sm:text-sm"
 									placeholder="Password"
 								/>
 							</div>
 						</div>
 						<div>
 							<label for="otp" class="sr-only">OTP</label>
-							<div class="relative rounded-md shadow-sm">
+							<div class="relative rounded-md shadow-xs">
 								<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
@@ -202,7 +202,7 @@
 									name="otp"
 									type="text"
 									autocomplete="off"
-									class="tertiaryBackgroundColor tertiaryColor primaryBorderColor appearance-none rounded-none block w-full pl-10 px-3 py-2 border rounded-b-md focus:outline-none focus:z-10 sm:text-sm"
+									class="tertiaryBackgroundColor tertiaryColor primaryBorderColor appearance-none rounded-none block w-full pl-10 px-3 py-2 border rounded-b-md focus:outline-hidden focus:z-10 sm:text-sm"
 									placeholder="OTP"
 								/>
 							</div>
@@ -213,18 +213,18 @@
 						<button
 							id="btn-signin"
 							type="submit"
-							class="primaryButton group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none"
+							class="primaryButton group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white focus:outline-hidden"
 						>
 							Sign in
 						</button>
 						<button
 							id="btn-signup"
 							type="button"
-							class="cancelButton group relative w-full flex justify-center my-2 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none"
+							class="cancelButton group relative w-full flex justify-center my-2 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white focus:outline-hidden"
 						>
 							Sign up
 						</button>
-						<span id="forgot-username" role="button" class="primaryColor focus:outline-none"> Forgot username? </span>
+						<span id="forgot-username" role="button" class="primaryColor focus:outline-hidden"> Forgot username? </span>
 					</div>
 				</form>
 			</div>
@@ -237,13 +237,13 @@
 			role="dialog"
 			aria-modal="true"
 		>
-			<div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+			<div class="fixed inset-0 bg-gray-500 bg-black/75 transition-opacity" aria-hidden="true"></div>
 			<span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 			<div
 				class="secondaryBackgroundColor inline-block align-bottom rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all m-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6"
 			>
 				<div class="sm:flex sm:items-start">
-					<div id="dialog-icon" class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+					<div id="dialog-icon" class="mx-auto shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
 						<svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
 							<path
 								stroke-linecap="round"
@@ -264,14 +264,14 @@
 					<button
 						id="dialog-button"
 						type="button"
-						class="dangerButton inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium focus:outline-none sm:w-auto sm:text-sm"
+						class="dangerButton inline-flex justify-center w-full rounded-md border border-transparent shadow-xs px-4 py-2 text-base font-medium focus:outline-hidden sm:w-auto sm:text-sm"
 					>
 						Okay
 					</button>
 					<button
 						id="dialog-button-cancel"
 						type="button"
-						class="cancelButton mt-2 w-full inline-flex justify-center rounded-md border px-4 py-2 text-base font-medium shadow-sm focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+						class="cancelButton mt-2 w-full inline-flex justify-center rounded-md border px-4 py-2 text-base font-medium shadow-xs focus:outline-hidden sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
 					>
 						Cancel
 					</button>

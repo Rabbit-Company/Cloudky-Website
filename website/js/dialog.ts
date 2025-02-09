@@ -11,11 +11,11 @@ export enum DialogType {
 }
 
 function getIconClassName(bgColorClass: string) {
-	return `mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full ${bgColorClass} sm:mx-0 sm:h-10 sm:w-10`;
+	return `mx-auto shrink-0 flex items-center justify-center h-12 w-12 rounded-full ${bgColorClass} sm:mx-0 sm:h-10 sm:w-10`;
 }
 
 function getButtonClassName(buttonColorClass: string) {
-	return `${buttonColorClass} inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium focus:outline-none sm:w-auto sm:text-sm`;
+	return `${buttonColorClass} inline-flex justify-center w-full rounded-md border border-transparent shadow-xs px-4 py-2 text-base font-medium focus:outline-hidden sm:w-auto sm:text-sm`;
 }
 
 export async function changeDialog(dialogType: DialogType, text: string) {

@@ -1,5 +1,4 @@
 import { CloudkyAPI, Error, type FileInformation } from "@rabbit-company/cloudky-api";
-import { getIcon } from "../icons";
 import {
 	clearStorage,
 	fhide,
@@ -13,7 +12,6 @@ import {
 	getDisplayedFiles,
 	updateSortIcons,
 	loadMoreFiles,
-	deleteFiles,
 	updateStats,
 } from "../utils";
 
@@ -138,22 +136,18 @@ let sortedFiles = filesToNestedObject(files);
 
 (window as any).downloadFile = async (id: string) => {
 	id = id.slice(1);
-	let data = await cloudky.downloadFile(id);
-	if (!(data instanceof Blob)) return;
+	let res = await cloudky.generateFileDownloadLink(id);
+	if (typeof res !== "string") return;
 
-	const parts = id.split("/");
-	const fileName = parts[parts.length - 1];
+	const link = document.createElement("a");
+	link.href = res;
+	link.target = "_blank";
+	link.download = "";
+	document.body.appendChild(link);
+	link.click();
+	document.body.removeChild(link);
 
-	let url = window.URL.createObjectURL(data);
-	let a = document.createElement("a");
-	a.href = url;
-	a.download = fileName;
-	document.body.appendChild(a);
-	a.click();
-	window.URL.revokeObjectURL(url);
-	document.body.removeChild(a);
-
-	localStorage.setItem("download-used", (Number(localStorage.getItem("download-used")) + data.size).toString());
+	//localStorage.setItem("download-used", (Number(localStorage.getItem("download-used")) + res.size).toString());
 	updateStats();
 };
 

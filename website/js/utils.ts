@@ -274,7 +274,7 @@ export async function getAccountData(server: string, username: string, token: st
 	localStorage.setItem("upload-limit", data.data.UploadLimit.toString());
 	localStorage.setItem("storage-used", data.data.StorageUsed.toString());
 	localStorage.setItem("storage-limit", data.data.StorageLimit.toString());
-	localStorage.setItem("storage-type", data.data.StorageType);
+	localStorage.setItem("storage-type", data.data.StorageType.toString());
 	localStorage.setItem("account-type", data.data.AccountType.toString());
 	localStorage.setItem("created", data.data.Created.toString());
 	return true;
@@ -359,7 +359,7 @@ export function refreshBreadcrumb(files: Record<string, any>) {
 	<li>
 		<div>
 			<a href="#" class="text-gray-400 hover:text-gray-500 cursor-pointer" onclick="handleBreadcrumbClick(''); return false;">
-				<svg class="h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+				<svg class="h-5 w-5 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
 					<path fill-rule="evenodd" d="M9.293 2.293a1 1 0 011.414 0l7 7A1 1 0 0117 11h-1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-3a1 1 0 00-1-1H9a1 1 0 00-1 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6H3a1 1 0 01-.707-1.707l7-7z" clip-rule="evenodd" />
 				</svg>
 				<span class="sr-only">Home</span>
@@ -373,7 +373,7 @@ export function refreshBreadcrumb(files: Record<string, any>) {
 		htmlBreadcrumb += `
 			<li>
 				<div class="flex items-center">
-					<svg class="h-5 w-5 flex-shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+					<svg class="h-5 w-5 shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
 						<path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
 					</svg>
 					<a href="#" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700 cursor-pointer" onclick="handleBreadcrumbClick('${path}'); return false;">${folder}</a>
@@ -427,7 +427,7 @@ export function refreshFileManager(files: Record<string, any>, displayFiles: num
 				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatLastModified(folder.Modified)}</td>
 				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatBytes(folder.Size)}</td>
 				<td class="relative whitespace-nowrap py-0 pl-3 pr-4 text-right text-sm sm:pr-0">
-					<button onclick="dropdownClick('folder-${i + 1}')" class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
+					<button onclick="dropdownClick('folder-${i + 1}')" class="text-gray-400 hover:text-gray-600 focus:outline-hidden focus:text-gray-600">
 						${getIcon("dots-vertical", "secondaryColor fileDropDown")}
 					</button>
 					<div id="folder-${i + 1}" class="hidden z-10 absolute right-0 mt-2 w-24 secondaryBackgroundColor rounded-lg shadow-lg" style="display: none">
@@ -459,7 +459,7 @@ export function refreshFileManager(files: Record<string, any>, displayFiles: num
 				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatLastModified(files[name].Modified)}</td>
 				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatBytes(files[name].Size)}</td>
 				<td class="relative whitespace-nowrap py-0 pl-3 pr-4 text-right text-sm sm:pr-0">
-					<button onclick="dropdownClick('file-${i + 1}')" class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
+					<button onclick="dropdownClick('file-${i + 1}')" class="text-gray-400 hover:text-gray-600 focus:outline-hidden focus:text-gray-600">
 						${getIcon("dots-vertical", "secondaryColor fileDropDown")}
 					</button>
 					<div id="file-${i + 1}" class="hidden z-10 absolute right-0 mt-2 w-24 secondaryBackgroundColor rounded-lg shadow-lg" style="display: none">
@@ -506,7 +506,7 @@ export function loadMoreFiles(files: Record<string, any>, amount = 20) {
 				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatLastModified(folder.Modified)}</td>
 				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatBytes(folder.Size)}</td>
 				<td class="relative whitespace-nowrap py-0 pl-3 pr-4 text-right text-sm sm:pr-0">
-					<button onclick="dropdownClick('folder-${i + 1}')" class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
+					<button onclick="dropdownClick('folder-${i + 1}')" class="text-gray-400 hover:text-gray-600 focus:outline-hidden focus:text-gray-600">
 						${getIcon("dots-vertical", "secondaryColor fileDropDown")}
 					</button>
 					<div id="file-${i + 1}" class="hidden z-10 absolute right-0 mt-2 w-24 secondaryBackgroundColor rounded-lg shadow-lg" syle="display: none">
@@ -536,7 +536,7 @@ export function loadMoreFiles(files: Record<string, any>, amount = 20) {
 				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatLastModified(files[name].Modified)}</td>
 				<td class="secondaryColor whitespace-nowrap px-3 py-4 text-sm">${formatBytes(files[name].Size)}</td>
 				<td class="relative whitespace-nowrap py-0 pl-3 pr-4 text-right text-sm sm:pr-0">
-					<button onclick="dropdownClick('file-${i + 1}')" class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600">
+					<button onclick="dropdownClick('file-${i + 1}')" class="text-gray-400 hover:text-gray-600 focus:outline-hidden focus:text-gray-600">
 						${getIcon("dots-vertical", "secondaryColor fileDropDown")}
 					</button>
 					<div id="file-${i + 1}" class="hidden z-10 absolute right-0 mt-2 w-24 secondaryBackgroundColor rounded-lg shadow-lg" style="display: none">
@@ -621,11 +621,11 @@ export function updateSortIcons() {
 		}
 
 		if (!sorting.includes(name)) {
-			sortIcon.className = "invisible ml-2 flex-none rounded text-gray-400 group-hover:visible group-focus:visible";
+			sortIcon.className = "invisible ml-2 flex-none rounded-sm text-gray-400 group-hover:visible group-focus:visible";
 			return;
 		}
 
-		sortIcon.className = "ml-2 flex-none rounded bg-gray-700 text-gray-900";
+		sortIcon.className = "ml-2 flex-none rounded-sm bg-gray-700 text-gray-900";
 	});
 }
 
